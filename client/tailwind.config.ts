@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: 'Pretendard, sans-serif'
+        sans: ['Pretendard, sans-serif']
       },
       colors: {
         background: 'var(--background)',
