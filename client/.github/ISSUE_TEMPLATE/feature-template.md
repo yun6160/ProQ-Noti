@@ -1,9 +1,9 @@
 ---
 name: Feature Template
 about: project's features
-title: ""
-labels: ""
-assignees: ""
+title: ''
+labels: ''
+assignees: ''
 ---
 
 ## 구현 기능

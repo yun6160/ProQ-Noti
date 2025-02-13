@@ -1,9 +1,9 @@
 ---
 name: Bug Template
 about: project's bugs
-title: ""
-labels: ""
-assignees: ""
+title: ''
+labels: ''
+assignees: ''
 ---
 
 ## 🐞 버그 내용
