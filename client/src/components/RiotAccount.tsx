@@ -4,9 +4,8 @@ import { useState } from "react";
 
 const RiotAccount = () => {
   const [riotId, setRiotId] = useState("");
-  const [accountData, setAccountData] = useState(null);
+  const [_accountData, setAccountData] = useState(null);
   const [error, setError] = useState("");
-  console.log(accountData);
 
   const fetchAccount = async () => {
     setError("");

@@ -11,7 +11,8 @@ export default [
     ...pluginReact.configs.flat.recommended,
     rules: {
       'react/react-in-jsx-scope': 'off',
-      'import/no-extraneous-dependencies': 'off'
+      'import/no-extraneous-dependencies': 'off',
+      "@typescript-eslint/no-unused-vars": "off"
     }
   }
 ];
