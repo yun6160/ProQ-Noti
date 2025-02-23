@@ -1,8 +1,9 @@
-export default function Home() {
+"use client";
 
+export default function Home() {
   return (
     <div>
-      HomePage
+      Home
     </div>
   );
 }
