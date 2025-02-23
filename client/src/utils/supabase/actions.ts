@@ -21,10 +21,11 @@ const signInWith = (provider: Provider) => async () => {
 };
 
 const signInWithKakao = signInWith("kakao");
+const signInWithGoogle = signInWith("google");
 
 const signOut = async () => {
   const supabase = await createClientForServer();
   await supabase.auth.signOut();
 };
 
-export { signInWithKakao, signOut };
+export { signInWithKakao, signInWithGoogle, signOut };
