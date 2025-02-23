@@ -1,11 +1,12 @@
 import './globals.css';
 import Providers from './provider';
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body>

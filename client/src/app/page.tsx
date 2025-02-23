@@ -1,13 +1,9 @@
-import RiotAccount from "@/components/RiotAccount";
-import RiotPuuid from "@/components/RiotPuuid";
-
+"use client";
 
 export default function Home() {
-
   return (
     <div>
-      <RiotAccount />
-      <RiotPuuid />
+      Home
     </div>
   );
 }
