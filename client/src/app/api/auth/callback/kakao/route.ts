@@ -1,12 +1,12 @@
-import { createClientForServer } from "@/utils/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { createClientForServer } from '@/utils/supabase/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const code = searchParams.get("code");
+  const code = searchParams.get('code');
 
   if (!code) {
-    return NextResponse.redirect("/error?message=Missing authorization code");
+    return NextResponse.redirect('/error?message=Missing authorization code');
   }
 
   const supabase = await createClientForServer();
@@ -14,7 +14,9 @@ export async function GET(request: NextRequest) {
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    return NextResponse.redirect(`/error?message=${encodeURIComponent(error.message)}`);
+    return NextResponse.redirect(
+      `/error?message=${encodeURIComponent(error.message)}`
+    );
   }
 
   const { user } = data.session;
@@ -22,18 +24,16 @@ export async function GET(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ message: 'empty user' });
   }
-  const { error: insertError } = await supabase
-    .from("profiles")
-    .upsert(
-      {
-        id: user.id,
-        email: user.email,
-        user_name: user.user_metadata?.name || "Unknown User",
-        avatar_url: user.user_metadata?.avatar_url || null,
-        created_at: new Date().toISOString(),
-      },
-      { onConflict: "id" }
-    );
+  const { error: insertError } = await supabase.from('users').upsert(
+    {
+      id: user.id,
+      email: user.email,
+      user_name: user.user_metadata?.name || 'Unknown User',
+      avatar_url: user.user_metadata?.avatar_url || null,
+      created_at: new Date().toISOString()
+    },
+    { onConflict: 'id' }
+  );
 
   return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`);
 }
