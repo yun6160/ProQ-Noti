@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Pretendard, sans-serif']
+        ganpan: ['KCC-Ganpan']
       },
       colors: {
         background: 'var(--background)',
