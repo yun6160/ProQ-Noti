@@ -9,7 +9,16 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        ganpan: ['KCC-Ganpan']
+        ganpan: ['KCC-Ganpan', 'sans-serif']
+      },
+      fontWeight: {
+        extraBold: '800',
+        bold: '700',
+        semiBold: '600',
+        medium: '500',
+        regular: '400',
+        light: '300',
+        extraLight: '200'
       },
       colors: {
         background: 'var(--background)',
