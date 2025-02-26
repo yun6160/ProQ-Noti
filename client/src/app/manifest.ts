@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'ProQ-Noti',
+    name: 'ProQ Noti',
     short_name: 'ProQ',
     description: '프로들의 협곡을 구경하자',
     start_url: '/',
