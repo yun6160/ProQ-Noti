@@ -2,6 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 800;
+  src: url('../fonts/Pretendard-ExtraBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  src: url('../fonts/Pretendard-Bold.woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  src: url('../fonts/Pretendard-SemiBold.woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  src: url('../fonts/Pretendard-Medium.woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  src: url('../fonts/Pretendard-Regular.woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  src: url('../fonts/Pretendard-Light.woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 200;
+  src: url('../fonts/Pretendard-ExtraLight.woff');
+}
+
+@font-face {
+  font-family: 'KCC-Ganpan';
+  font-weight: 500;
+  src: url('../fonts/KCC-Ganpan.woff') format('woff');
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,5 +65,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Pretendard', 'sans-serif';
 }
