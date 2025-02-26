@@ -3,7 +3,7 @@ import './globals.css';
 import Providers from './provider';
 
 export const metadata: Metadata = {
-  title: '프로들의 솔랭을 실시간으로',
+  title: '프로들의 협곡을 실시간으로',
   icons: {
     icon: '/favicon.ico'
   }
