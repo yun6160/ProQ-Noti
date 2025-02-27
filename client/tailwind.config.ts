@@ -9,11 +9,28 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Pretendard, sans-serif']
+        ganpan: ['KCC-Ganpan', 'sans-serif']
+      },
+      fontWeight: {
+        extraBold: '800',
+        bold: '700',
+        semiBold: '600',
+        medium: '500',
+        regular: '400',
+        light: '300',
+        extraLight: '200'
       },
       colors: {
         background: 'var(--background)',
-        foreground: 'var(--foreground)'
+        foreground: 'var(--foreground)',
+        primary: {
+          coral: '#E95F5C',
+          mint: '#79CEB8',
+          yellow: '#FFDB00',
+          skyblue: '#5CC3E8',
+          navy: '#314855',
+          white: '#FFFFFF'
+        }
       },
       width: {
         web: '46.875rem'
