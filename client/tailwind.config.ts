@@ -22,7 +22,15 @@ export default {
       },
       colors: {
         background: 'var(--background)',
-        foreground: 'var(--foreground)'
+        foreground: 'var(--foreground)',
+        primary: {
+          coral: '#E95F5C',
+          mint: '#79CEB8',
+          yellow: '#FFDB00',
+          skyblue: '#5CC3E8',
+          navy: '#314855',
+          white: '#FFFFFF'
+        }
       },
       width: {
         web: '46.875rem'
