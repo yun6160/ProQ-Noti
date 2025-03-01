@@ -18,7 +18,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="bg-primary-white w-mobile screen:w-web h-full px-[2rem] py-[2rem] flex flex-col items-center">
+            {children}
+          </div>
+        </Providers>
       </body>
       <Pwa />
     </html>

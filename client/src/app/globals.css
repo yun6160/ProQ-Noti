@@ -5,65 +5,70 @@
 @font-face {
   font-family: 'Pretendard';
   font-weight: 800;
-  src: url('../fonts/Pretendard-ExtraBold.woff') format('woff');
+  src: url('./assets/fonts/Pretendard-ExtraBold.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Pretendard';
   font-weight: 700;
-  src: url('../fonts/Pretendard-Bold.woff');
+  src: url('./assets/fonts/Pretendard-Bold.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Pretendard';
   font-weight: 600;
-  src: url('../fonts/Pretendard-SemiBold.woff');
+  src: url('./assets/fonts/Pretendard-SemiBold.woff');
 }
 
 @font-face {
   font-family: 'Pretendard';
   font-weight: 500;
-  src: url('../fonts/Pretendard-Medium.woff');
+  src: url('./assets/fonts/Pretendard-Medium.woff');
 }
 
 @font-face {
   font-family: 'Pretendard';
   font-weight: 400;
-  src: url('../fonts/Pretendard-Regular.woff');
+  src: url('./assets/fonts/Pretendard-Regular.woff');
 }
 
 @font-face {
   font-family: 'Pretendard';
   font-weight: 300;
-  src: url('../fonts/Pretendard-Light.woff');
+  src: url('./assets/fonts/Pretendard-Light.woff');
 }
 
 @font-face {
   font-family: 'Pretendard';
   font-weight: 200;
-  src: url('../fonts/Pretendard-ExtraLight.woff');
+  src: url('./assets/fonts/Pretendard-ExtraLight.woff');
 }
 
 @font-face {
   font-family: 'KCC-Ganpan';
   font-weight: 500;
-  src: url('../fonts/KCC-Ganpan.woff') format('woff');
+  src: url('./assets/fonts/KCC-Ganpan.woff') format('woff');
 }
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #314855;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #314855;
     --foreground: #ededed;
   }
 }
 
 body {
-  color: var(--foreground);
+  display: flex;
+  justify-content: center;
+  @apply text-primary-navy;
   background: var(--background);
   font-family: 'Pretendard', 'sans-serif';
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
