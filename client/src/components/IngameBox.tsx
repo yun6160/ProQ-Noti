@@ -5,7 +5,7 @@ import LiveIcon from '@/app/assets/icons/live.svg';
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
-import { IngameBoxProps } from '@/types';
+import type { IIngameBoxProps } from '@/types';
 
 export default function IngameBox({
   name,
@@ -13,7 +13,7 @@ export default function IngameBox({
   isSubscribe: initialIsSubscribe,
   isOpen,
   onBoxClick
-}: IngameBoxProps) {
+}: IIngameBoxProps) {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(initialIsSubscribe);
 
   const handleSubscribeClick = (event: MouseEvent<HTMLButtonElement>) => {

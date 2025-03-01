@@ -3,9 +3,9 @@
 import { useRef, useState } from 'react';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
-import { SubscribeItem } from '@/types';
+import type { ISubscribeItem } from '@/types';
 
-export default function SubscribeList({ list }: { list: SubscribeItem[] }) {
+export default function SubscribeList({ list }: { list: ISubscribeItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
