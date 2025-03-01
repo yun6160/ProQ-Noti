@@ -50,6 +50,22 @@ export default {
       backgroundColor: {
         error: '#f5f5f5' // 에러 배경색
       },
+      // 애니메이션 설정
+      keyframes: {
+        'slide-in-down': {
+          '0%': {
+            transform: 'translateY(-10%)',
+            opacity: '0'
+          },
+          '100%': {
+            transform: 'translateY(0)',
+            opacity: '1'
+          }
+        }
+      },
+      animation: {
+        slideindown: 'slide-in-down 0.5s ease-in-out forwards'
+      },
       // 반응형 디자인을 위한 화면 크기 설정
       screens: {
         mobile: '480px',
@@ -59,8 +75,7 @@ export default {
       },
       // 그림자 설정
       boxShadow: {
-        top: '0 0 8px rgba(0, 0, 0, 0.08)',
-        bottom: '0 0 8px rgba(0, 0, 0, 0.08)'
+        bottom: '0px 4px 4px rgba(0, 0, 0, 0.1)'
       },
       // 폰트 크기 설정
       fontSize: {
