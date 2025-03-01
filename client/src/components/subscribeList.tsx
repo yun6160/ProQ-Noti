@@ -13,13 +13,13 @@ export default function SubscribeList({ list }: { list: ISubscribeItem[] }) {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const handleOutsideClick = () => {
+  const handleSetOpenIndex = () => {
     setOpenIndex(null);
   };
 
   useOutsideClick(
     containerRef as React.RefObject<HTMLElement>,
-    handleOutsideClick
+    handleSetOpenIndex
   );
 
   return (
