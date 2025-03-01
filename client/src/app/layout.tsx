@@ -19,7 +19,7 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <div className="bg-primary-white w-mobile screen:w-web h-full px-[2rem] py-[2rem]">
+          <div className="bg-primary-white w-mobile screen:w-web h-full px-[2rem] py-[2rem] flex flex-col items-center">
             {children}
           </div>
         </Providers>
