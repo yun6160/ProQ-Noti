@@ -61,11 +61,23 @@ export default {
             transform: 'translateY(0)',
             opacity: '1'
           }
+        },
+        liked: {
+          '50%': {
+            transform: 'scale(1.15)',
+            opacity: '1'
+          },
+          '100%': {
+            transform: 'scale(1)',
+            opacity: '1'
+          }
         }
       },
       animation: {
-        slideindown: 'slide-in-down 0.5s ease-in-out forwards'
+        slideindown: 'slide-in-down 0.5s ease-in-out forwards',
+        like: 'liked 1s ease-in-out'
       },
+
       // 반응형 디자인을 위한 화면 크기 설정
       screens: {
         mobile: '480px',
