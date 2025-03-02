@@ -1,12 +1,11 @@
 'use client';
 
-import PushNotificationManager from './_notification/PushNotificationManager';
-import InstallPrompt from './_notification/InstallPrompt';
+import { Layout } from '@/components/Layout';
 
 export default function Page() {
   return (
-    <div className="h-full">
-      <div className="text-xl font-semibold mb-4">소속 팀 선택</div>
+    <Layout>
+      <Layout.Header />
       <div className="flex flex-col items-center gap-5 bg-[#5CC3E8] p-10 h-screen">
         <div className="flex gap-5">
           <div className="flex flex-col justify-center items-center text-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white">
@@ -57,6 +56,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
