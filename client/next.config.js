@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const withPWAInit = require('next-pwa');
-
 const withPWA = require('next-pwa')({
   dest: 'public',
   exclude: [
