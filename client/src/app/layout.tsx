@@ -18,7 +18,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex justify-center w-full" style={{ height: '100vh'}}>
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>

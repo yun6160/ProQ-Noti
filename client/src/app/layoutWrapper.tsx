@@ -13,8 +13,8 @@ export default function LayoutWrapper({
 
   const layoutClass =
     pathname === '/'
-      ? 'bg-primary-white w-mobile screen:w-web h-full px-[2rem] py-[2rem] flex flex-col items-center'
-      : 'bg-primary-mint w-mobile screen:w-web h-full px-[2rem] py-[2rem] flex flex-col items-center';
+      ? 'flex flex-col bg-primary-white w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg rounded-lg'
+      : 'flex flex-col bg-primary-mint w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg rounded-lg';
 
   return (
     <div className={layoutClass}>

@@ -1,6 +1,13 @@
+"use client";
+
+import { Layout } from '@/components/Layout';
 import SubscribeList from '../../components/subscribeList';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SubscribePage() {
+  const router = useRouter();
+  const [teamName, setTeamName] = useState("HLE");
   const dummyArr = [
     {
       name: 'zeus',
@@ -30,7 +37,12 @@ export default function SubscribePage() {
   ];
   return (
     <>
-      <SubscribeList list={dummyArr} />
+      <Layout>
+        <Layout.Header title={teamName} handleBack={() => router.back()} />
+        <Layout.Main>
+          <SubscribeList list={dummyArr} />
+        </Layout.Main>
+      </Layout>
     </>
   );
 }
