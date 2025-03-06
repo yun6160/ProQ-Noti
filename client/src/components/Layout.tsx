@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import ArrowBack from '@/app/assets/icons/arrowBack.svg';
-import Menu from '@/app/assets/icons/Menu.svg';
+import Dropdown from './dropdown';
 
 interface HeaderProps {
   title?: string;
@@ -23,7 +23,7 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
           aria-label="뒤로 가기"
           onClick={handleBack ?? (() => router.back())}
         >
-          <ArrowBack alt="뒤로가기 아이콘" width={24} height={24} />
+          <ArrowBack alt="뒤로가기 아이콘" width={30} height={30} />
         </button>
         {children ? (
           children
@@ -33,19 +33,15 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
             {option}
           </>
         )}
-        <button className="absolute right-0">
-          <Menu alt="햄버거 아이콘" width={24} height={24} />
-        </button>
+        <Dropdown />
       </div>
     </header>
   );
 };
 
-const Main = ({ children }: { children: ReactNode}) => {
+const Main = ({ children }: { children: ReactNode }) => {
   return (
-    <main
-      className="relative flex flex-col flex-grow w-full min-h-0 px-5 py-3 overflow-y-scroll"
-    >
+    <main className="relative flex flex-col flex-grow w-full min-h-0 px-5 py-3 overflow-y-scroll">
       {children}
     </main>
   );
@@ -55,11 +51,11 @@ const Footer = ({ children }: { children: ReactNode }) => {
   return (
     <footer className="w-full h-[5rem] min-h-[5rem] px-6 py-4 shadow-top">
       {children}
-    </footer>   
+    </footer>
   );
 };
 
-export const Layout = ({ children }: {children: ReactNode }) => {
+export const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex flex-col justify-center w-full h-full border-x border-gray-500">
       {children}
