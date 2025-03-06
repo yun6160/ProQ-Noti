@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { ReactNode } from "react";
-import arrowBack from "@/app/assets/icons/arrowBack.svg";
-import hamburger from "@/app/assets/icons/Menu.svg";
+import { useRouter } from "next/navigation";
+import ArrowBack from '@/app/assets/icons/arrowBack.svg';
+import Menu from '@/app/assets/icons/Menu.svg';
 
 interface HeaderProps {
   title?: string;
@@ -24,7 +24,7 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
           aria-label="뒤로 가기"
           onClick={handleBack ?? (() => router.back())}
         >
-          <Image src={arrowBack} alt="뒤로가기 아이콘" width={24} height={24} />
+          <ArrowBack alt="뒤로가기 아이콘" width={24} height={24} />
         </button>
         {children ? (
           children
@@ -35,7 +35,7 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
           </>
         )}
         <button className="absolute right-0">
-          <Image src={hamburger} alt="햄버거 아이콘" width={24} height={24} />
+          <Menu alt="햄버거 아이콘" width={24} height={24} />
         </button>
       </div>
     </header>

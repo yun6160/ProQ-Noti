@@ -1,11 +1,13 @@
 'use client';
 
 import { Layout } from '@/components/Layout';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+  const router = useRouter();
   return (
     <Layout>
-      <Layout.Header />
+      <Layout.Header title="소속 팀 선택" handleBack={() => router.back()} />
       <div className="flex flex-col items-center gap-5 bg-[#5CC3E8] p-10 h-screen">
         <div className="flex gap-5">
           <div className="flex flex-col justify-center items-center text-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white">
