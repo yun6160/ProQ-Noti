@@ -16,7 +16,7 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
   const router = useRouter();
 
   return (
-    <header className="w-full h-[3.375rem] p-4 shadow-bottom">
+    <header className="w-full h-[4rem] screen:h-[4.5rem] p-4 shadow-bottom">
       <div className="relative flex items-center justify-center w-full h-full">
         <button
           className="absolute left-0"
