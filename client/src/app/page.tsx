@@ -1,47 +1,26 @@
 'use client';
 
 import { Layout } from '@/components/Layout';
+import { TeamGrid } from '@/components/TeamGrid';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Page() {
   const router = useRouter();
+  const [selectedTeam, setSelectedTeam] = useState<string[] | null>(null); // 선택한 팀 상태
 
-  const teams = [
-    ['젠지', '이스포츠'],
-    ['한화생명', '이스포츠'],
-    ['디플러스', '기아'],
-    ['T1'],
-    ['BNK', '피어엑스'],
-    ['DRX'],
-    ['OK저축은행', '브리온'],
-    ['농심', '레드포스'],
-    ['DN', '프릭스'],
-    ['KT', '롤스터']
-  ];
+  // 팀 선택 이벤트 핸들러
+  const handleSelectTeam = (team: string[]) => {
+    setSelectedTeam(team);
+    console.log('선택한 팀:', team.join(' '));
+    // 필요한 경우, 선택한 팀으로 라우터 이동 가능
+    // router.push(`/team/${team[0]}`); 이런식으로도 활용 가능
+  };
 
   return (
     <Layout>
       <Layout.Header title="소속 팀 선택" handleBack={() => router.back()} />
-      <div className="flex flex-col items-center gap-5 bg-[#5CC3E8] pt-24 web:pt-60 px-10 h-full overflow-auto">
-        {/* 2행 5열 고정, 여백 균등 적용 */}
-        <div className="grid grid-rows-5 grid-cols-2 gap-5 screen:gap-10 w-full max-w-[22rem] h-full">
-          {teams.map(([line1, line2], index) => (
-            <div
-              key={index}
-              className="flex flex-col justify-center items-center text-center aspect-square bg-white hover:bg-gray-200 cursor-pointer rounded-xl shadow-bottom"
-            >
-              <span className="font-semibold text-md screen:text-xl">
-                {line1}
-              </span>
-              {line2 && (
-                <span className="font-semibold text-md screen:text-xl">
-                  {line2}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+      <TeamGrid onSelectTeam={handleSelectTeam} />
     </Layout>
   );
 }
