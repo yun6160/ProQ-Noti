@@ -3,6 +3,8 @@
 import { ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import ArrowBack from '@/app/assets/icons/arrowBack.svg';
+import { IoIosArrowBack } from 'react-icons/io';
+
 import Dropdown from './dropdown';
 
 // Header Props 타입 정의
@@ -23,11 +25,11 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
         {/* 왼쪽 뒤로가기 버튼 */}
         {handleBack && (
           <button
-            className="absolute left-0"
+            className="absolute left-1"
             aria-label="뒤로 가기"
             onClick={handleBack ?? (() => router.back())} // handleBack 없으면 기본 뒤로가기
           >
-            <ArrowBack alt="뒤로가기 아이콘" width={30} height={30} />
+            <IoIosArrowBack size={30} />
           </button>
         )}
 
@@ -51,7 +53,7 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
 // Main 컴포넌트
 const Main = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="relative flex flex-col flex-grow w-full min-h-0 py-3 overflow-y-scroll">
+    <main className="relative flex flex-col flex-grow w-full min-h-0 py-3">
       {children}
     </main>
   );
