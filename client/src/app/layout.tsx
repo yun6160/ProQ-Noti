@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import './globals.css';
 import Providers from './provider';
 import Pwa from './Pwa';
-import LayoutWrapper from './layoutWrapper';
+import LayoutRouter from './layoutRouter';
 
 export const metadata: Metadata = {
   title: '프로들의 협곡을 실시간으로',
@@ -20,7 +20,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className="flex justify-center w-full" style={{ height: '100vh'}}>
         <Providers>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <LayoutRouter>{children}</LayoutRouter>
         </Providers>
       </body>
       <Pwa />
