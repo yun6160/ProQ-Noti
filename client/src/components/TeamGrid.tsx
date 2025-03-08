@@ -19,7 +19,7 @@ type TeamGridProps = {
 
 export function TeamGrid({ onSelectTeam }: TeamGridProps) {
   return (
-    <div className="flex flex-col items-center gap-5 web:gap-10 bg-[#5CC3E8] pt-24 web:pt-36 px-15 h-screen">
+    <div className="flex flex-col items-center gap-5 web:gap-10 px-15">
       {Array.from({ length: Math.ceil(teams.length / 2) }).map(
         (_, rowIndex) => (
           <div key={rowIndex} className="flex gap-5 web:gap-10">
