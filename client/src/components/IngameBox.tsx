@@ -24,7 +24,7 @@ export default function IngameBox({
   return (
     <div className="flex flex-col gap-[0.875rem]">
       <div
-        className="flex items-center justify-center px-7 py-3 gap-5 w-[21.875rem] h-[3.437rem] rounded-[10px] shadow-bottom bg-primary-white"
+        className="flex items-center justify-center px-7 py-3 gap-5 w-[20.69rem] web:w-[30rem] h-[3.437rem] rounded-[10px] shadow-bottom bg-primary-white"
         onClick={onBoxClick}
       >
         <div className="w-[13.75rem] font-semibold">{name}</div>
@@ -44,7 +44,7 @@ export default function IngameBox({
         </button>
       </div>
       {isOpen && (
-        <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[21.875rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
+        <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
           {/* 챔피언, 스펠 2개, 룬 2개 */}
           <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center ">
             <img
