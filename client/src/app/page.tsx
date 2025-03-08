@@ -18,7 +18,7 @@ export default function Page() {
 
   return (
     <Layout>
-      <Layout.Header title="소속 팀 선택" handleBack={() => router.back()} />
+      <Layout.Header title="소속 팀 선택" />
       <TeamGrid onSelectTeam={handleSelectTeam} />
     </Layout>
   );

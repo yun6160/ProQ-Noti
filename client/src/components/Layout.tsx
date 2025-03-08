@@ -21,13 +21,15 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
     <header className="w-full h-[4rem] screen:h-[4.5rem] p-4 shadow-bottom">
       <div className="relative flex items-center justify-center w-full h-full">
         {/* 왼쪽 뒤로가기 버튼 */}
-        <button
-          className="absolute left-0"
-          aria-label="뒤로 가기"
-          onClick={handleBack ?? (() => router.back())} // handleBack 없으면 기본 뒤로가기
-        >
-          <ArrowBack alt="뒤로가기 아이콘" width={30} height={30} />
-        </button>
+        {handleBack && (
+          <button
+            className="absolute left-0"
+            aria-label="뒤로 가기"
+            onClick={handleBack ?? (() => router.back())} // handleBack 없으면 기본 뒤로가기
+          >
+            <ArrowBack alt="뒤로가기 아이콘" width={30} height={30} />
+          </button>
+        )}
 
         {/* 중앙 영역 - children이 있으면 children, 없으면 기본 타이틀과 옵션 */}
         {children ? (
@@ -49,7 +51,7 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
 // Main 컴포넌트
 const Main = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="relative flex flex-col flex-grow w-full min-h-0 px-5 py-3 overflow-y-scroll">
+    <main className="relative flex flex-col flex-grow w-full min-h-0 py-3 overflow-y-scroll">
       {children}
     </main>
   );
