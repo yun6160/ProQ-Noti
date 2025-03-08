@@ -1,63 +1,25 @@
 'use client';
 
 import { Layout } from '@/components/Layout';
+import { TeamGrid } from '@/components/TeamGrid';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Page() {
   const router = useRouter();
+  const [selectedTeam, setSelectedTeam] = useState<string[] | null>(null);
+
+  const handleSelectTeam = (team: string[]) => {
+    setSelectedTeam(team);
+    console.log('선택한 팀:', team.join(' '));
+    // 필요한 경우, 선택한 팀으로 라우터 이동 가능
+    // router.push(`/team/${team[0]}`); 이런식으로도 활용 가능
+  };
+
   return (
     <Layout>
       <Layout.Header title="소속 팀 선택" handleBack={() => router.back()} />
-      <div className="flex flex-col items-center gap-5 bg-[#5CC3E8] pt-24 web:pt-60 px-10 h-screen">
-        <div className="flex gap-5">
-          <div className="flex flex-col justify-center items-center text-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>젠지</span>
-            <span>이스포츠</span>
-          </div>
-          <div className="flex flex-col justify-center items-center text-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>한화생명</span>
-            <span>이스포츠</span>
-          </div>
-        </div>
-        <div className="flex gap-5">
-          <div className="flex flex-col justify-center items-center text-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>디플러스</span>
-            <span>기아</span>
-          </div>
-          <div className="flex justify-center items-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>T1</span>
-          </div>
-        </div>
-        <div className="flex gap-5">
-          <div className="flex flex-col justify-center items-center text-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>BNK</span>
-            <span>피어엑스</span>
-          </div>
-          <div className="flex flex-col justify-center items-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>DRX</span>
-          </div>
-        </div>
-        <div className="flex gap-5">
-          <div className="flex flex-col justify-center items-center text-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>OK저축은행</span>
-            <span>브리온</span>
-          </div>
-          <div className="flex flex-col justify-center items-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>농심</span>
-            <span>레드포스</span>
-          </div>
-        </div>
-        <div className="flex gap-5">
-          <div className="flex flex-col justify-center items-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>DN</span>
-            <span>프릭스</span>
-          </div>
-          <div className="flex flex-col justify-center items-center w-[6.25rem] h-[6.25rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer">
-            <span>KT</span>
-            <span>롤스터</span>
-          </div>
-        </div>
-      </div>
+      <TeamGrid onSelectTeam={handleSelectTeam} />
     </Layout>
   );
 }
