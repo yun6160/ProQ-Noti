@@ -7,9 +7,8 @@ import { useState } from 'react';
 
 export default function Page() {
   const router = useRouter();
-  const [selectedTeam, setSelectedTeam] = useState<string[] | null>(null); // 선택한 팀 상태
+  const [selectedTeam, setSelectedTeam] = useState<string[] | null>(null);
 
-  // 팀 선택 이벤트 핸들러
   const handleSelectTeam = (team: string[]) => {
     setSelectedTeam(team);
     console.log('선택한 팀:', team.join(' '));

@@ -14,7 +14,7 @@ const teams = [
 ];
 
 type TeamGridProps = {
-  onSelectTeam: (team: string[]) => void; // 팀 선택 이벤트 함수 Prop 추가
+  onSelectTeam: (team: string[]) => void;
 };
 
 export function TeamGrid({ onSelectTeam }: TeamGridProps) {
