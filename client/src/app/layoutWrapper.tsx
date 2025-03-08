@@ -12,8 +12,8 @@ export default function LayoutWrapper({
 
   const layoutClass =
     pathname === '/'
-      ? 'flex flex-col bg-primary-white w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg rounded-lg'
-      : 'flex flex-col bg-primary-mint w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg rounded-lg';
+      ? 'flex flex-col bg-primary-white w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg'
+      : 'flex flex-col bg-primary-mint w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg';
 
   return <div className={layoutClass}>{children}</div>;
 }
