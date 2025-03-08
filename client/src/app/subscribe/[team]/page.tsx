@@ -1,13 +1,15 @@
-"use client";
+'use client';
 
 import { Layout } from '@/components/Layout';
-import SubscribeList from '../../components/subscribeList';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import SubscribeList from '@/components/subscribeList';
+import { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
 export default function SubscribePage() {
   const router = useRouter();
-  const [teamName, setTeamName] = useState("HLE");
+  const params = useParams();
+  const team = decodeURIComponent(params.team as string);
+  const [teamName, setTeamName] = useState<string>('');
   const dummyArr = [
     {
       name: 'zeus',
@@ -35,6 +37,15 @@ export default function SubscribePage() {
       isSubscribe: true
     }
   ];
+
+  useEffect(() => {
+    setTeamName(team || '');
+
+    return () => {
+      setTeamName('');
+    };
+  }, [team]);
+
   return (
     <>
       <Layout>

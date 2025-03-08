@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import './globals.css';
 import Providers from './provider';
-import Pwa from './Pwa';
+import Pwa from './_notification/Pwa';
 import LayoutRouter from './layoutRouter';
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex justify-center w-full" style={{ height: '100vh'}}>
+      <body className="flex justify-center w-full" style={{ height: '100vh' }}>
         <Providers>
           <LayoutRouter>{children}</LayoutRouter>
         </Providers>
