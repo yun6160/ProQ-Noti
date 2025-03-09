@@ -13,8 +13,8 @@ export function TeamCard({ names, onClick }: TeamCardProps) {
       {names.map((name, index) => (
         <span
           key={index}
-          className="font-ganpan text-md web:text-lg screen:text-2xl text-white
-           [text-shadow:_-1px_-1px_0_black,1px_-1px_0_black,-1px_1px_0_black,1px_1px_0_black]"
+          className="font-ganpan text-md web:text-lg screen:text-2xl text-primary-white
+          [text-shadow:_-1px_0_#314855,0_1px_#314855,1px_0_#314855,0_-1px_#314855]"
         >
           {name}
         </span>
