@@ -11,10 +11,17 @@ export default function LayoutRouter({
   const pathname = usePathname();
 
   const getBgColor = () => {
-    if (['/', '/subscribe'].includes(pathname)) return 'bg-primary-skyblue';
+    if (pathname === '/' || pathname.startsWith('/subscribe/'))
+      return 'bg-primary-skyblue';
     if (['/login', '/mypage'].includes(pathname)) return 'bg-primary-mint';
     return 'bg-primary-white';
   };
 
-  return <div className={`flex flex-col ${getBgColor()} w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg`}>{children}</div>;
+  return (
+    <div
+      className={`flex flex-col ${getBgColor()} w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg`}
+    >
+      {children}
+    </div>
+  );
 }
