@@ -11,9 +11,7 @@ export default function Page() {
 
   const handleSelectTeam = (team: string[]) => {
     setSelectedTeam(team);
-    console.log('선택한 팀:', team.join(' '));
-    // 필요한 경우, 선택한 팀으로 라우터 이동 가능
-    // router.push(`/team/${team[0]}`); 이런식으로도 활용 가능
+    router.push(`/subscribe/${team[0]}`);
   };
 
   return (

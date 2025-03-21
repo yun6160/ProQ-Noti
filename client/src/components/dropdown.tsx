@@ -1,7 +1,7 @@
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { PiDotsThreeCircle } from 'react-icons/pi';
+import { GiHamburgerMenu } from 'react-icons/gi';
 
 interface DropdownProps {
   isOpen?: boolean;
@@ -20,30 +20,30 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
   };
 
   return (
-    <div ref={dropdownRef} className="absolute right-0">
+    <div ref={dropdownRef} className="absolute right-1 flex items-center">
       <button
         className="bg-none border-none cursor-pointer outline-none p-0"
         onClick={() => setOpen(!open)}
       >
-        <PiDotsThreeCircle size={30} className="text-primary-navy" />
+        <GiHamburgerMenu size={25} className="text-primary-navy" />
       </button>
       {open && (
-        <div className="absolute top-6 right-0 bg-white shadow-md rounded z-50 border border-gray-300 text-sm text-black w-[5rem]">
+        <div className="absolute top-8 right-0 bg-white shadow-md rounded z-50 border border-gray-300 text-sm text-black w-[5rem]">
           <ul className="list-none p-0 m-0">
             <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
-              <Link href="/" className="p-2 block text-black no-underline">
+              <Link href="/" className="block p-2 text-black no-underline">
                 메인 화면
               </Link>
             </li>
             <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
-              <Link href="/login" className="p-2 block text-black no-underline">
+              <Link href="/login" className="block p-2 text-black no-underline">
                 로그인
               </Link>
             </li>
             <li className="text-center hover:bg-gray-100 cursor-pointer">
               <button
                 onClick={handleLogout}
-                className="block w-full text-black"
+                className="block p-2 w-full text-black"
               >
                 로그아웃
               </button>
