@@ -4,10 +4,10 @@ import { supabase } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 
 interface Users {
-  id: string;
+  avatar_url: string | null;
   email: string;
-  user_name: string;
-  avatar_url: string;
+  id: string;
+  user_name: string | null;
 }
 
 export default function Dashboard() {
