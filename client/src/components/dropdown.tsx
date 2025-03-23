@@ -1,7 +1,10 @@
+import { storeLogout } from '@/store/authSlice';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
+import { signOut } from '@/utils/supabase/actions';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { useDispatch } from 'react-redux';
 
 interface DropdownProps {
   isOpen?: boolean;
@@ -10,13 +13,15 @@ interface DropdownProps {
 const Dropdown = ({ isOpen = false }: DropdownProps) => {
   const [open, setOpen] = useState(isOpen);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
 
   useOutsideClick(dropdownRef as React.RefObject<HTMLElement>, () =>
     setOpen(false)
   );
 
   const handleLogout = () => {
-    // logout logic
+    signOut();
+    dispatch(storeLogout());
   };
 
   return (

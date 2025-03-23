@@ -12,13 +12,18 @@ export default function IngameBox({
   isLive,
   isSubscribe: initialIsSubscribe,
   isOpen,
-  onBoxClick
+  onBoxClick,
+  loggedIn
 }: IIngameBoxProps) {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(initialIsSubscribe);
 
   const handleSubscribeClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    setIsSubscribe(!isSubscribe);
+    if (loggedIn) {
+      setIsSubscribe(!isSubscribe);
+    } else {
+      // toast로 로그인 후 구독해주세요 띄워주기
+    }
   };
 
   return (
