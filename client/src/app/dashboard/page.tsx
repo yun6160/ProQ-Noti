@@ -33,6 +33,7 @@ export default function Dashboard() {
     };
     fetchUser();
   }, []);
+  console.log(user);
 
   if (loading) {
     return (
