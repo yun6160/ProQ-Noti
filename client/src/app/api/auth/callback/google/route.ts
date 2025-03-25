@@ -36,5 +36,5 @@ export async function GET(request: NextRequest) {
     { onConflict: 'id' }
   );
 
-  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`);
+  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/mypage`);
 }
