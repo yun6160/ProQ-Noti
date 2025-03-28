@@ -8,13 +8,17 @@ import { FaHourglassStart } from 'react-icons/fa';
 import type { IIngameBoxProps } from '@/types';
 
 export default function IngameBox({
-  name,
+  pro_name,
+  summoner_name,
+  tag_line,
   isLive,
   isSubscribe: initialIsSubscribe,
   isOpen,
   onBoxClick
 }: IIngameBoxProps) {
-  const [isSubscribe, setIsSubscribe] = useState<boolean>(initialIsSubscribe);
+  const [isSubscribe, setIsSubscribe] = useState<boolean>(
+    initialIsSubscribe ?? false
+  );
 
   const handleSubscribeClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -24,10 +28,10 @@ export default function IngameBox({
   return (
     <div className="flex flex-col gap-[0.875rem]">
       <div
-        className="flex items-center justify-center px-7 py-3 gap-5 w-[20.69rem] web:w-[30rem] h-[3.437rem] rounded-[10px] shadow-bottom bg-primary-white"
+        className="flex items-center justify-center px-7 py-3 gap-5 w-[20.69rem] web:w-[30rem] h-[3.437rem] rounded-[10px] shadow-bottom bg-primary-white cursor-pointer"
         onClick={onBoxClick}
       >
-        <div className="w-[13.75rem] font-semibold">{name}</div>
+        <div className="w-[13.75rem] font-semibold">{pro_name}</div>
         {isLive ? (
           <div className="animate-pulse">
             <LiveIcon />
@@ -72,7 +76,10 @@ export default function IngameBox({
               ></img>
             </div>
           </div>
-          <div className="text-body2Bold">제우스 #zeus</div>
+          <div className="text-body2Bold">
+            {summoner_name}
+            {tag_line && `#${tag_line}`}
+          </div>
           {/* 녹화랑 큐 타입 */}
           <div className="flex justify-between w-full text-body2">
             <div className="flex gap-1 items-center">
