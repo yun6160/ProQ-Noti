@@ -10,4 +10,5 @@ export interface ISubscribeItem {
 export interface IIngameBoxProps extends ISubscribeItem {
   isOpen: boolean;
   onBoxClick: () => void;
+  loggedIn: boolean;
 }

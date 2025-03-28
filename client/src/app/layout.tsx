@@ -3,6 +3,7 @@ import './globals.css';
 import Providers from './provider';
 import Pwa from './_notification/Pwa';
 import LayoutRouter from './layoutRouter';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: '프로들의 협곡을 실시간으로',
@@ -22,6 +23,7 @@ export default async function RootLayout({
         <Providers>
           <LayoutRouter>{children}</LayoutRouter>
         </Providers>
+        <Toaster />
       </body>
       <Pwa />
     </html>

@@ -4,12 +4,15 @@ import { Layout } from '@/components/Layout';
 import SubscribeList from '@/components/subscribeList';
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { isLoggedIn } from '@/store/authSlice';
 
 export default function SubscribePage() {
   const router = useRouter();
   const params = useParams();
   const team = decodeURIComponent(params.team as string);
   const [teamName, setTeamName] = useState<string>('');
+
   const dummyArr = [
     {
       name: 'zeus',

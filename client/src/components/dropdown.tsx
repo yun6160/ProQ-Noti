@@ -1,7 +1,11 @@
+import { useToast } from '@/hooks/use-toast';
+import { isLoggedIn as selectIsLoggedIn, storeLogout } from '@/store/authSlice';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
+import { signOut } from '@/utils/supabase/actions';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface DropdownProps {
   isOpen?: boolean;
@@ -10,13 +14,20 @@ interface DropdownProps {
 const Dropdown = ({ isOpen = false }: DropdownProps) => {
   const [open, setOpen] = useState(isOpen);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   useOutsideClick(dropdownRef as React.RefObject<HTMLElement>, () =>
     setOpen(false)
   );
 
   const handleLogout = () => {
-    // logout logic
+    signOut();
+    dispatch(storeLogout());
+    toast({
+      description: "로그아웃 되었습니다."
+    })
   };
 
   return (
@@ -35,19 +46,23 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
                 메인 화면
               </Link>
             </li>
-            <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
-              <Link href="/login" className="block p-2 text-black no-underline">
-                로그인
-              </Link>
-            </li>
-            <li className="text-center hover:bg-gray-100 cursor-pointer">
-              <button
-                onClick={handleLogout}
-                className="block p-2 w-full text-black"
-              >
-                로그아웃
-              </button>
-            </li>
+            {!isLoggedIn && (
+              <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
+                <Link href="/login" className="block p-2 text-black no-underline">
+                  로그인
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li className="text-center hover:bg-gray-100 cursor-pointer">
+                <button
+                  onClick={handleLogout}
+                  className="block p-2 w-full text-black"
+                >
+                  로그아웃
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       )}

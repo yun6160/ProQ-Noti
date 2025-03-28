@@ -6,19 +6,26 @@ import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
 import type { IIngameBoxProps } from '@/types';
+import { useToast } from '@/hooks/use-toast';
 
 export default function IngameBox({
   name,
   isLive,
   isSubscribe: initialIsSubscribe,
   isOpen,
-  onBoxClick
+  onBoxClick,
+  loggedIn
 }: IIngameBoxProps) {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(initialIsSubscribe);
+  const { toast } = useToast();
 
   const handleSubscribeClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    setIsSubscribe(!isSubscribe);
+    if (loggedIn) {
+      setIsSubscribe(!isSubscribe);
+    } else {
+      toast({ description: '로그인 후 구독버튼을 눌러주세요!'});
+    }
   };
 
   return (
