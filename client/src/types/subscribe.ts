@@ -9,6 +9,7 @@ export interface ISubscribeItem extends gammerInfo {
 export interface IIngameBoxProps extends ISubscribeItem {
   isOpen: boolean;
   onBoxClick: () => void;
+  loggedIn: boolean;
 }
 
 export interface gammerInfo {

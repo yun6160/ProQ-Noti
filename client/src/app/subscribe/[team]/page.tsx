@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { GET } from '@/app/api/subscribe/route';
 import { gammerInfo } from '@/types';
+import { useSelector } from 'react-redux';
+import { isLoggedIn } from '@/store/authSlice';
 
 export default function SubscribePage() {
   const router = useRouter();

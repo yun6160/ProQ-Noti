@@ -4,10 +4,13 @@ import { useRef, useState } from 'react';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
 import { gammerInfo, ISubscribeItem } from '@/types';
+import { useSelector } from 'react-redux';
+import { isLoggedIn } from '@/store/authSlice';
 
 export default function SubscribeList({ list }: { list: gammerInfo[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const loggedIn = useSelector(isLoggedIn);
 
   const handleBoxClick = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -45,6 +48,7 @@ export default function SubscribeList({ list }: { list: gammerInfo[] }) {
           puuid={item.puuid}
           summoner_name={item.summoner_name}
           tag_line={item.tag_line}
+          loggedIn={loggedIn}
         />
       ))}
     </div>
