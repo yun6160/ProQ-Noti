@@ -20,6 +20,19 @@ export default function AuthProvider () {
     };
 
     checkSession();
+
+    // 실시간 세션 감지
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        dispatch(storeLogin());
+      } else {
+        dispatch(storeLogout());
+      }
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, [dispatch]);
 
   return null;

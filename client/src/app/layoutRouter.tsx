@@ -1,7 +1,6 @@
 // LayoutWrapper.tsx (클라이언트 컴포넌트)
 'use client';
 
-import store from '@/store/store';
 import { usePathname } from 'next/navigation';
 
 export default function LayoutRouter({
