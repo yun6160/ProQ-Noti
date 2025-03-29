@@ -1,22 +1,24 @@
+import { Team } from '@/types';
+
 type TeamCardProps = {
-  names: string[];
+  team: Team;
   onClick?: () => void;
 };
 
-export function TeamCard({ names, onClick }: TeamCardProps) {
+export function TeamCard({ team, onClick }: TeamCardProps) {
+  const team_name = [team.name_prefix, team.name_suffix];
   return (
     <div
-      className="flex flex-col justify-center items-center text-center w-[5rem] web:w-[6rem] screen:w-[10rem] h-[5rem] web:h-[6rem]
+      className="flex flex-col justify-center items-center text-center w-[6rem] web:w-[7rem] screen:w-[10rem] h-[6rem] web:h-[7rem]
        screen:h-[10rem] rounded-xl shadow-bottom bg-white hover:bg-gray-200 cursor-pointer"
       onClick={onClick}
     >
-      {names.map((name, index) => (
+      {team_name.map((value, id) => (
         <span
-          key={index}
-          className="font-ganpan text-md web:text-lg screen:text-2xl text-primary-white
-          [text-shadow:_-1px_0_#314855,0_1px_#314855,1px_0_#314855,0_-1px_#314855]"
+          key={id}
+          className="font-ganpan text-md web:text-lg screen:text-2xl text-primary-navy font-bold"
         >
-          {name}
+          {value}
         </span>
       ))}
     </div>
