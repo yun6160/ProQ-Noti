@@ -36,8 +36,9 @@ export type Database = {
     Tables: {
       riot_pro_users: {
         Row: {
-          created_at: string | null;
           id: number;
+          is_oline: boolean;
+          last_seen: string | null;
           pro_name: string;
           puuid: string;
           summoner_name: string;
@@ -45,8 +46,9 @@ export type Database = {
           team_id: number | null;
         };
         Insert: {
-          created_at?: string | null;
           id?: number;
+          is_oline?: boolean;
+          last_seen?: string | null;
           pro_name: string;
           puuid: string;
           summoner_name: string;
@@ -54,8 +56,9 @@ export type Database = {
           team_id?: number | null;
         };
         Update: {
-          created_at?: string | null;
           id?: number;
+          is_oline?: boolean;
+          last_seen?: string | null;
           pro_name?: string;
           puuid?: string;
           summoner_name?: string;
@@ -119,7 +122,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           id?: number;
-          name_abbr?: string;
+          name_abbr: string;
           name_prefix: string;
           name_suffix?: string | null;
         };

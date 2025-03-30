@@ -1,17 +1,17 @@
-"use client"
+'use client';
 
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from '@/hooks/use-toast';
 import {
   Toast,
   ToastClose,
   ToastDescription,
   ToastProvider,
   ToastTitle,
-  ToastViewport,
-} from "@/components/ui/toast"
+  ToastViewport
+} from '@/components/ui/toast';
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
@@ -27,9 +27,24 @@ export function Toaster() {
             {action}
             <ToastClose />
           </Toast>
-        )
+        );
       })}
-      <ToastViewport />
+      <ToastViewport
+        className="
+        fixed 
+        top-16 
+        left-1/2 
+        -translate-x-1/2 
+        sm:left-auto 
+        sm:right-4 
+        sm:translate-x-0 
+        sm:top-16
+        z-[9999] 
+        w-full 
+        max-w-xs 
+        px-4
+      "
+      />
     </ToastProvider>
-  )
+  );
 }

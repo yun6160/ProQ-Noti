@@ -2,7 +2,6 @@
   /* 선수 정보 & 인게임 정보 */
 }
 export interface ISubscribeItem extends gammerInfo {
-  isLive: boolean;
   isSubscribe: boolean;
 }
 
@@ -20,4 +19,6 @@ export interface gammerInfo {
   summoner_name: string;
   tag_line: string;
   team_id?: number | null;
+  is_oline: boolean;
+  last_seen?: string | null;
 }
