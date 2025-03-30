@@ -7,32 +7,40 @@ import { useRouter } from "next/navigation";
 export default function MyPage() {
   const router = useRouter();
   const dummyArr = [
-    {
-      name: 'zeus',
-      isLive: true,
-      isSubscribe: true
-    },
-    {
-      name: 'peanut',
-      isLive: false,
-      isSubscribe: true
-    },
-    {
-      name: 'zeka',
-      isLive: true,
-      isSubscribe: false
-    },
-    {
-      name: 'viper',
-      isLive: true,
-      isSubscribe: true
-    },
-    {
-      name: 'delight',
-      isLive: true,
-      isSubscribe: true
-    }
-  ];
+  {
+    id: 1,
+    pro_name: 'Zeus',
+    puuid: 'puuid-1234',
+    summoner_name: 'Hide on bush',
+    tag_line: 'KR1',
+    is_online: true,
+    created_at: '2024-01-01T12:00:00Z',
+    team_id: 101,
+    last_seen: null,
+  },
+  {
+    id: 2,
+    pro_name: 'Faker',
+    puuid: 'puuid-5678',
+    summoner_name: 'The Unkillable Demon King',
+    tag_line: 'KR2',
+    is_online: false,
+    created_at: '2024-01-02T15:30:00Z',
+    team_id: 101,
+    last_seen: '2024-03-30T08:45:00Z',
+  },
+  {
+    id: 3,
+    pro_name: 'Deft',
+    puuid: 'puuid-9999',
+    summoner_name: 'Blue Arrow',
+    tag_line: 'KR3',
+    is_online: true,
+    created_at: null,
+    team_id: null,
+    last_seen: null,
+  },
+];
 
 
   return (
