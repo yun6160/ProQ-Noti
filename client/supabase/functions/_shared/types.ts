@@ -1,14 +1,15 @@
-// types.ts
-export type Player = {
+export interface Player {
   id: number;
   is_online: boolean;
+  last_checked_at: string;
   last_online: string | null;
+  position_number: number;
   pro_name: string;
   puuid: string;
   summoner_name: string;
   tag_line: string;
   team_id: number | null;
-};
+}
 
 export type Json =
   | string
@@ -19,38 +20,15 @@ export type Json =
   | Json[];
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never;
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string;
-          query?: string;
-          variables?: Json;
-          extensions?: Json;
-        };
-        Returns: Json;
-      };
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
   public: {
     Tables: {
       riot_pro_users: {
         Row: {
           id: number;
           is_online: boolean;
+          last_checked_at: string;
           last_online: string | null;
+          position_number: number;
           pro_name: string;
           puuid: string;
           summoner_name: string;
@@ -59,8 +37,10 @@ export type Database = {
         };
         Insert: {
           id?: number;
-          is_oline?: boolean;
+          is_online?: boolean;
+          last_checked_at?: string;
           last_online?: string | null;
+          position_number?: number;
           pro_name: string;
           puuid: string;
           summoner_name: string;
@@ -69,8 +49,10 @@ export type Database = {
         };
         Update: {
           id?: number;
-          is_oline?: boolean;
+          is_online?: boolean;
+          last_checked_at?: string;
           last_online?: string | null;
+          position_number?: number;
           pro_name?: string;
           puuid?: string;
           summoner_name?: string;

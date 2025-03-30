@@ -1,59 +1,53 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { GET } from '@/app/api/subscribe/route';
 import { GET as GET_TEAM } from '@/app/api/team/route';
 import { gamerInfo, Team } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
 export function usePlayerList(team: string) {
-  const [members, setMembers] = useState<gamerInfo[]>([]);
   const { toast } = useToast();
 
-  const getMembers = async () => {
-    const response = await GET(team);
+  const {
+    data: members = [],
+    isLoading: loading,
+    error
+  } = useQuery<gamerInfo[]>({
+    queryKey: ['players', team],
+    queryFn: async () => {
+      const response = await GET(team);
+      if (!Array.isArray(response)) {
+        throw new Error('서버 오류');
+      }
+      return response;
+    },
+    enabled: !!team // team이 존재할 때만 요청 실행
+  });
 
-    if (Array.isArray(response)) {
-      setMembers(response);
-      toast({ description: '업뎃 완료🎉' });
-    } else if (response.status === 500) {
-      toast({
-        description:
-          '선수 목록을 불러 올 수 없습니다. 잠시 후 다시 시도해 주세요.'
-      });
-    }
-  };
+  if (error) {
+    toast({
+      description:
+        '선수 목록을 불러 올 수 없습니다. 잠시 후 다시 시도해 주세요.'
+    });
+  }
 
-  useEffect(() => {
-    if (!team) return;
-
-    getMembers();
-    const interval = setInterval(getMembers, 3 * 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, [team]);
-
-  return { members };
+  return { members, loading };
 }
 
 export function useTeams() {
-  const [teams, setTeams] = useState<Team[]>([]);
-
-  const getTeams = async () => {
-    try {
+  const {
+    data: teams = [],
+    isLoading,
+    error
+  } = useQuery<Team[]>({
+    queryKey: ['teams'],
+    queryFn: async () => {
       const response = await GET_TEAM();
-
-      if (Array.isArray(response)) {
-        setTeams(response);
-      } else if (response.status == 500) {
-        console.error('Error fetching teams:', response.body.error);
+      if (!Array.isArray(response)) {
+        throw new Error(response?.body?.error || '서버 오류');
       }
-    } catch (error) {
-      console.error('Unexpected error fetching teams:', error);
+      return response;
     }
-  };
+  });
 
-  useEffect(() => {
-    getTeams();
-  }, []);
-
-  return { teams };
+  return { teams, isLoading, error };
 }
