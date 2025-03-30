@@ -38,7 +38,7 @@ export type Database = {
         Row: {
           id: number;
           is_online: boolean;
-          last_seen: string | null;
+          last_online: string | null;
           pro_name: string;
           puuid: string;
           summoner_name: string;
@@ -48,7 +48,7 @@ export type Database = {
         Insert: {
           id?: number;
           is_oline?: boolean;
-          last_seen?: string | null;
+          last_online?: string | null;
           pro_name: string;
           puuid: string;
           summoner_name: string;
@@ -58,7 +58,7 @@ export type Database = {
         Update: {
           id?: number;
           is_oline?: boolean;
-          last_seen?: string | null;
+          last_online?: string | null;
           pro_name?: string;
           puuid?: string;
           summoner_name?: string;

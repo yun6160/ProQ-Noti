@@ -20,5 +20,5 @@ export interface gammerInfo {
   tag_line: string;
   team_id?: number | null;
   is_online: boolean;
-  last_seen?: string | null;
+  last_online?: string | null;
 }
