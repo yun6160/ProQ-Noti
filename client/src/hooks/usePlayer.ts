@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { GET } from '@/app/api/subscribe/route';
 import { GET as GET_TEAM } from '@/app/api/team/route';
-import { gammerInfo, Team } from '@/types';
+import { gamerInfo, Team } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
 export function usePlayerList(team: string) {
-  const [members, setMembers] = useState<gammerInfo[]>([]);
+  const [members, setMembers] = useState<gamerInfo[]>([]);
   const { toast } = useToast();
 
   const getMembers = async () => {

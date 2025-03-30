@@ -1,7 +1,7 @@
 {
   /* 선수 정보 & 인게임 정보 */
 }
-export interface ISubscribeItem extends gammerInfo {
+export interface ISubscribeItem extends gamerInfo {
   isSubscribe: boolean;
 }
 
@@ -11,7 +11,7 @@ export interface IIngameBoxProps extends ISubscribeItem {
   loggedIn: boolean;
 }
 
-export interface gammerInfo {
+export interface gamerInfo {
   created_at?: string | null;
   id: number;
   pro_name: string;
