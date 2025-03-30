@@ -37,7 +37,7 @@ export type Database = {
       riot_pro_users: {
         Row: {
           id: number;
-          is_oline: boolean;
+          is_online: boolean;
           last_seen: string | null;
           pro_name: string;
           puuid: string;

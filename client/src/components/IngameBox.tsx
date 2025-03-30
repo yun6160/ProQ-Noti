@@ -12,7 +12,7 @@ export default function IngameBox({
   pro_name,
   summoner_name,
   tag_line,
-  is_oline,
+  is_online,
   isSubscribe: initialIsSubscribe,
   isOpen,
   onBoxClick,
@@ -39,7 +39,7 @@ export default function IngameBox({
         onClick={onBoxClick}
       >
         <div className="w-[13.75rem] font-semibold">{pro_name}</div>
-        {is_oline ? (
+        {is_online ? (
           <div className="animate-pulse">
             <LiveIcon />
           </div>

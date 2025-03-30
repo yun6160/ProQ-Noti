@@ -19,6 +19,6 @@ export interface gammerInfo {
   summoner_name: string;
   tag_line: string;
   team_id?: number | null;
-  is_oline: boolean;
+  is_online: boolean;
   last_seen?: string | null;
 }

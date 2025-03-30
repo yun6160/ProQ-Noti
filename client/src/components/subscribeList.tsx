@@ -27,7 +27,7 @@ export default function SubscribeList({ list }: { list: gammerInfo[] }) {
 
   const gammerList: ISubscribeItem[] = list.map((item) => ({
     ...item,
-    is_oline: true,
+    is_online: true,
     isSubscribe: true
   }));
 
@@ -40,7 +40,7 @@ export default function SubscribeList({ list }: { list: gammerInfo[] }) {
         <IngameBox
           key={index}
           pro_name={item.pro_name}
-          is_oline={item.is_oline}
+          is_online={item.is_online}
           isSubscribe={item.isSubscribe}
           isOpen={openIndex === index}
           onBoxClick={() => handleBoxClick(index)}
