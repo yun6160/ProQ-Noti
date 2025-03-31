@@ -3,11 +3,11 @@
 import { useRef, useState } from 'react';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
-import { gammerInfo, ISubscribeItem } from '@/types';
+import { gamerInfo, ISubscribeItem } from '@/types';
 import { useSelector } from 'react-redux';
 import { isLoggedIn } from '@/store/authSlice';
 
-export default function SubscribeList({ list }: { list: gammerInfo[] }) {
+export default function SubscribeList({ list }: { list: gamerInfo[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const loggedIn = useSelector(isLoggedIn);
@@ -25,9 +25,8 @@ export default function SubscribeList({ list }: { list: gammerInfo[] }) {
     handleSetOpenIndex
   );
 
-  const gammerList: ISubscribeItem[] = list.map((item) => ({
+  const playerList: ISubscribeItem[] = list.map((item) => ({
     ...item,
-    isLive: true,
     isSubscribe: true
   }));
 
@@ -36,11 +35,11 @@ export default function SubscribeList({ list }: { list: gammerInfo[] }) {
       ref={containerRef}
       className="flex flex-col gap-5 items-center justify-center w-full h-full"
     >
-      {gammerList.map((item, index) => (
+      {playerList.map((item, index) => (
         <IngameBox
           key={index}
           pro_name={item.pro_name}
-          isLive={item.isLive}
+          is_online={item.is_online}
           isSubscribe={item.isSubscribe}
           isOpen={openIndex === index}
           onBoxClick={() => handleBoxClick(index)}
