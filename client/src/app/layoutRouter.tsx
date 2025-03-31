@@ -1,6 +1,7 @@
 // LayoutWrapper.tsx (클라이언트 컴포넌트)
 'use client';
 
+import { Toaster } from '@/components/ui/toaster';
 import store from '@/store/store';
 import { usePathname } from 'next/navigation';
 
@@ -23,6 +24,7 @@ export default function LayoutRouter({
       className={`flex flex-col ${getBgColor()} w-full min-w-[21.875rem] max-w-[46.785rem] h-auto shadow-lg`}
     >
       {children}
+      <Toaster />
     </div>
   );
 }

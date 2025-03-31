@@ -9,7 +9,8 @@ export const GET = async (teamAbbr: string) => {
   const { data, error } = await supabase
     .from(TABLES.RIOT_PRO_USERS)
     .select(`*, ${TABLES.TEAMS}!inner(name_abbr)`)
-    .eq(`${TABLES.TEAMS}.name_abbr`, teamAbbr);
+    .eq(`${TABLES.TEAMS}.name_abbr`, teamAbbr)
+    .order('position_number', { ascending: true });
 
   if (error) {
     return { status: 500, body: { error: 'Internal Server Error' } };
