@@ -1,3 +1,16 @@
+export interface Player {
+  id: number;
+  is_online: boolean;
+  last_checked_at: string;
+  last_online: string | null;
+  position_number: number;
+  pro_name: string;
+  puuid: string;
+  summoner_name: string;
+  tag_line: string;
+  team_id: number | null;
+}
+
 export type Json =
   | string
   | number
