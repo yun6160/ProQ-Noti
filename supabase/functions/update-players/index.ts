@@ -47,9 +47,12 @@ Deno.serve(async () => {
         })
         .eq('id', id);
 
-      if (updateError) {
+      if (updateError || res.status !== 200) {
         failCount++;
-        console.error(`❌ [${pro_name}] DB 업데이트 실패:`, updateError);
+        console.error(
+          `❌ [${pro_name}] DB 업데이트 실패:`,
+          updateError || res.status
+        );
       } else {
         successCount++;
       }
