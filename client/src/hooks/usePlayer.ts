@@ -11,6 +11,9 @@ export function usePlayerList(team: string) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [teamId, setTeamId] = useState<number | null>(null);
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   // 해당 팀의 team_id 가져오기
   useEffect(() => {
@@ -66,16 +69,39 @@ export function usePlayerList(team: string) {
           table: TABLES.RIOT_PRO_USERS
         },
         (payload) => {
-          const updatedTeamId = Number(payload.new?.team_id);
-          const oldOnline = payload.old?.is_online;
-          const newOnline = payload.new?.is_online;
+          // 예시: players 쿼리 데이터를 가져오기
+          const currentMembers = queryClient.getQueryData<gamerInfo[]>([
+            'players',
+            team
+          ]);
+          if (!currentMembers) return;
 
+          const updatedTeamId = Number(payload.new?.team_id);
           if (updatedTeamId !== teamId) return;
 
-          if (oldOnline === newOnline) return;
+          const newOnline = payload.new?.is_online;
+          let oldOnline = null;
 
-          queryClient.invalidateQueries({ queryKey: ['players', team] });
-          toast({ description: '🎉실시간 업데이트 완료🎉' });
+          for (const member of currentMembers) {
+            if (member.id === payload.new?.id) {
+              oldOnline = member.is_online;
+              if (newOnline !== oldOnline) {
+                if (debounceTimer) {
+                  clearTimeout(debounceTimer);
+                }
+
+                const newTimer = setTimeout(() => {
+                  queryClient.invalidateQueries({
+                    queryKey: ['players', team]
+                  });
+                  toast({ description: '🎉실시간 업데이트 완료🎉' });
+                }, 1000);
+
+                // 타이머 상태 업데이트
+                setDebounceTimer(newTimer);
+              }
+            }
+          }
         }
       )
       .subscribe();
