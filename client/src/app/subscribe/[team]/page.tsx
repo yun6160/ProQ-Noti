@@ -19,7 +19,7 @@ export default function SubscribePage() {
 
   useEffect(() => {
     setTeamName(team || '');
-    const timer = setTimeout(() => setMinLoading(false), 500);
+    const timer = setTimeout(() => setMinLoading(false), 300);
     return () => {
       setTeamName('');
       clearTimeout(timer);
