@@ -6,7 +6,6 @@ export default function SubscribeListSkeleton() {
           {/* 상단 박스 */}
           <div className="flex items-center justify-between px-7 py-3 gap-5 w-[20.69rem] web:w-[30rem] h-[3.437rem] rounded-[10px] shadow-bottom bg-gray-200">
             <div className="w-[13.75rem] h-4 bg-gray-300 rounded" />
-            <div className="w-6 h-6 bg-gray-300 rounded-full" />
           </div>
 
           {/* 하단 펼침 영역 생략 or 대체 박스 넣고 싶다면 아래 주석 해제 */}
