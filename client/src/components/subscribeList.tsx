@@ -12,8 +12,6 @@ export default function SubscribeList({ list }: { list: gammerInfo[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const loggedIn = useSelector(isLoggedIn);
 
-  console.log(loggedIn);
-
   const handleBoxClick = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
   };

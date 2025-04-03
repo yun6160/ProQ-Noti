@@ -13,15 +13,11 @@ export default function AuthProvider () {
       const {
         data: { session }
       } = await supabase.auth.getSession();
-
-      console.log(session);
       
       if (session) {
         dispatch(storeLogin());
-        console.log('성공');
       } else {
         dispatch(storeLogout());
-        console.log("실패;")
       }
     };
 
@@ -31,10 +27,8 @@ export default function AuthProvider () {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         dispatch(storeLogin());
-        console.log('성공');
       } else {
         dispatch(storeLogout());
-        console.log('실패');
       }
     });
 
