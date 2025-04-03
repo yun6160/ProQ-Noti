@@ -71,9 +71,7 @@ const Footer = ({ children }: { children: ReactNode }) => {
 // Layout 컴포넌트
 export const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="flex flex-col justify-center w-full h-full border-x border-gray-500">
-      {children}
-    </div>
+    <div className="flex flex-col justify-center w-full h-full">{children}</div>
   );
 };
 

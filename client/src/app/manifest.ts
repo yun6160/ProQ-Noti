@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'ProQ Noti',
     short_name: 'ProQ',
-    description: '프로들의 협곡을 구경하자',
+    description: '프로들의 협곡을 실시간으로',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
