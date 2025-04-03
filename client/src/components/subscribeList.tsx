@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
 import { gamerInfo, ISubscribeItem } from '@/types';
@@ -10,7 +10,13 @@ import { isLoggedIn } from '@/store/authSlice';
 export default function SubscribeList({ list }: { list: gamerInfo[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
   const loggedIn = useSelector(isLoggedIn);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleBoxClick = (index: number) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -29,6 +35,8 @@ export default function SubscribeList({ list }: { list: gamerInfo[] }) {
     ...item,
     isSubscribe: true
   }));
+
+  if (!mounted) return null;
 
   return (
     <div
