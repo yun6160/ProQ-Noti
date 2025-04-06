@@ -57,8 +57,6 @@ export function usePlayerList(team: string) {
     });
   }
 
-  console.log('members:', members);
-
   // 선수 online 상태 테이블 실시간 업데이트
   useEffect(() => {
     if (!team) return;

@@ -4,15 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
 import { gamerInfo, ISubscribeItem } from '@/types';
-import { useSelector } from 'react-redux';
-import { isLoggedIn } from '@/store/authSlice';
-import { isSubscribed } from '@/utils';
+import { getIsLoggedIn, isSubscribed } from '@/utils';
 
 export default function SubscribeList({ list }: { list: gamerInfo[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const loggedIn = useSelector(isLoggedIn);
+  const loggedIn = getIsLoggedIn();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
