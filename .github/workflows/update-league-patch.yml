@@ -48,6 +48,7 @@ jobs:
 
       # (선택) Vercel 자동 배포
       - name: Trigger Vercel Deploy
-        run: vercel --prod --yes
+        run: |
+          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
