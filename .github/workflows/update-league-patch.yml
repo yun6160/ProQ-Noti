@@ -37,7 +37,8 @@ jobs:
             -d '{
               "key": "NEXT_PUBLIC_LEAGUE_PATCH",
               "value": "${{ steps.patch.outputs.patch }}",
-              "target": ["production"]
+              "target": ["production"],
+              "type": "plain"
             }'
           else
             echo "Updated NEXT_PUBLIC_LEAGUE_PATCH to ${{ steps.patch.outputs.patch }}"
