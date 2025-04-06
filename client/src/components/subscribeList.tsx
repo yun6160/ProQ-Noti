@@ -6,6 +6,7 @@ import IngameBox from '@/components/IngameBox';
 import { gamerInfo, ISubscribeItem } from '@/types';
 import { useSelector } from 'react-redux';
 import { isLoggedIn } from '@/store/authSlice';
+import { isSubscribed } from '@/utils';
 
 export default function SubscribeList({ list }: { list: gamerInfo[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -33,7 +34,7 @@ export default function SubscribeList({ list }: { list: gamerInfo[] }) {
 
   const playerList: ISubscribeItem[] = list.map((item) => ({
     ...item,
-    isSubscribe: true
+    isSubscribed: isSubscribed(item, String(item.id))
   }));
 
   if (!mounted) return null;
@@ -48,7 +49,7 @@ export default function SubscribeList({ list }: { list: gamerInfo[] }) {
           key={index}
           pro_name={item.pro_name}
           is_online={item.is_online}
-          isSubscribe={item.isSubscribe}
+          isSubscribed={item.isSubscribed}
           isOpen={openIndex === index}
           onBoxClick={() => handleBoxClick(index)}
           id={item.id}

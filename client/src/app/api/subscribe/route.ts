@@ -5,10 +5,14 @@ import { supabase } from '@/utils/supabase/client';
  * @description Get all team members
  * @returns string[]
  */
-export const GET = async (teamAbbr: string) => {
+export const GET = async (teamAbbr: string, userId?: string) => {
   const { data, error } = await supabase
     .from(TABLES.RIOT_PRO_USERS)
-    .select(`*, ${TABLES.TEAMS}!inner(name_abbr)`)
+    .select(
+      `*, ${TABLES.TEAMS}!inner(name_abbr), ${TABLES.SUBSCRIBE}(
+      user_id
+    )`
+    )
     .eq(`${TABLES.TEAMS}.name_abbr`, teamAbbr)
     .order('position_number', { ascending: true });
 

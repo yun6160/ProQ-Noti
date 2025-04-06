@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { TABLES } from '@/constant/db';
+import { getUserId } from '@/utils';
 
 export function usePlayerList(team: string) {
   const { toast } = useToast();
@@ -14,6 +15,7 @@ export function usePlayerList(team: string) {
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
     null
   );
+  const userId = getUserId();
 
   // 해당 팀의 team_id 가져오기
   useEffect(() => {
@@ -39,7 +41,7 @@ export function usePlayerList(team: string) {
   } = useQuery<gamerInfo[]>({
     queryKey: ['players', team],
     queryFn: async () => {
-      const response = await GET(team);
+      const response = await GET(team, userId ?? undefined);
       if (!Array.isArray(response)) {
         throw new Error('서버 오류');
       }
@@ -54,6 +56,8 @@ export function usePlayerList(team: string) {
         '선수 목록을 불러 올 수 없습니다. 잠시 후 다시 시도해 주세요.'
     });
   }
+
+  console.log('members:', members);
 
   // 선수 online 상태 테이블 실시간 업데이트
   useEffect(() => {

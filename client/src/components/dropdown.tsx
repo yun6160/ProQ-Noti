@@ -1,11 +1,12 @@
 import { useToast } from '@/hooks/use-toast';
-import { isLoggedIn as selectIsLoggedIn, storeLogout } from '@/store/authSlice';
+import { storeLogout } from '@/store/authSlice';
+import { getIsLoggedIn } from '@/utils';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import { signOut } from '@/utils/supabase/actions';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 interface DropdownProps {
   isOpen?: boolean;
@@ -16,7 +17,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const { toast } = useToast();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const isLoggedIn = getIsLoggedIn();
 
   useOutsideClick(dropdownRef as React.RefObject<HTMLElement>, () =>
     setOpen(false)
