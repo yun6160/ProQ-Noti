@@ -1,7 +1,7 @@
 name: Update League Patch & Vercel Env
 
 on:
-  schedule: [{ cron: '0 0 * * *' }] # 매일 자정 실행
+  schedule: [{ cron: '0 3 * * 3' }] # 매주 수요일 한국시간(KST) 정오 실행
   workflow_dispatch:               # 수동 실행도 가능
 
 jobs:
