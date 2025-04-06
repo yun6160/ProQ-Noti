@@ -19,9 +19,9 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel
 
-      - name: Upsert LEAGUE_PATCH env var in Vercel
+      - name: Upsert NEXT_PUBLIC_LEAGUE_PATCH env var in Vercel
         run: |
-          PATCH_RESULT=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/LEAGUE_PATCH" \
+          PATCH_RESULT=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
           -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
           -H "Content-Type: application/json" \
           -d '{
@@ -30,23 +30,22 @@ jobs:
           }')
 
           if [ "$PATCH_RESULT" = "404" ]; then
-            echo "Creating new LEAGUE_PATCH env var..."
+            echo "Creating new NEXT_PUBLIC_LEAGUE_PATCH env var..."
             curl -X POST "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
-              "key": "LEAGUE_PATCH",
+              "key": "NEXT_PUBLIC_LEAGUE_PATCH",
               "value": "${{ steps.patch.outputs.patch }}",
               "target": ["production"]
             }'
           else
-            echo "Updated LEAGUE_PATCH to ${{ steps.patch.outputs.patch }}"
+            echo "Updated NEXT_PUBLIC_LEAGUE_PATCH to ${{ steps.patch.outputs.patch }}"
           fi
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      # (선택) Vercel 자동 배포
       - name: Trigger Vercel Deploy
         run: |
           vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
