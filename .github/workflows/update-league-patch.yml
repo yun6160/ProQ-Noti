@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
       - name: Get latest League patch
         id: latest
         run: |
@@ -20,7 +23,7 @@ jobs:
         id: current
         run: |
           CURRENT=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-          "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env") 
+          "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env")
 
           CURRENT_PATCH=$(echo "$CURRENT" | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH") | .value')
           echo "current_patch=$CURRENT_PATCH" >> $GITHUB_OUTPUT
@@ -48,9 +51,11 @@ jobs:
             "target": ["production"]
           }'
 
+      - name: Install Vercel CLI
+        if: steps.check.outputs.need_update == 'true'
+        run: npm install -g vercel
+
       - name: Trigger Vercel Deploy
         if: steps.check.outputs.need_update == 'true'
         run: |
           vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
