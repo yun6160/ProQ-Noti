@@ -45,8 +45,8 @@ jobs:
       - name: Upsert NEXT_PUBLIC_LEAGUE_PATCH env var in Vercel
         if: steps.check.outputs.need_update == 'true'
         run: |
-          echo "⏳ 패치 업데이트 시도 중..."
-          RESPONSE=$(curl -s -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
+          echo "패치 업데이트 시도 중..."
+          PATCH_RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -54,8 +54,8 @@ jobs:
               "target": ["production"]
             }')
 
-          if echo "$RESPONSE" | grep -q '"code":"not_found"'; then
-            echo "📦 환경변수가 없어 새로 생성합니다."
+          if [ "$PATCH_RESPONSE_CODE" = "404" ]; then
+            echo "환경변수가 없어 새로 생성합니다."
             curl -X POST "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
               -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               -H "Content-Type: application/json" \
@@ -65,12 +65,12 @@ jobs:
                 "target": ["production"],
                 "type": "plain"
               }'
+          elif [ "$PATCH_RESPONSE_CODE" = "200" ]; then
+            echo "패치 환경변수 업데이트 완료"
           else
-            echo "✅ 패치 환경변수 업데이트 완료"
+            echo "알 수 없는 오류 발생 (HTTP $PATCH_RESPONSE_CODE)"
+            exit 1
           fi
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Trigger Vercel Deploy
         if: steps.check.outputs.need_update == 'true'
