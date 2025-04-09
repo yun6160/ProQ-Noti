@@ -2,7 +2,7 @@ name: Update League Patch & Vercel Env
 
 on:
   schedule:
-    - cron: '0 3,9,15,21 * * *' # 매일 한국시간 정오부터 6시간 간격 (UTC 기준)
+    - cron: '0 3,9,15,21 * * *' # 한국시간 기준 매일 12시, 18시, 자정, 6시 실행
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo (optional but good practice)
+      - name: Checkout repo (선택사항)
         uses: actions/checkout@v3
 
       - name: Install Vercel CLI
@@ -27,7 +27,6 @@ jobs:
         run: |
           CURRENT=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
           "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env")
-
           CURRENT_PATCH=$(echo "$CURRENT" | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH") | .value')
           echo "current_patch=$CURRENT_PATCH" >> $GITHUB_OUTPUT
 
@@ -45,17 +44,23 @@ jobs:
       - name: Upsert NEXT_PUBLIC_LEAGUE_PATCH env var in Vercel
         if: steps.check.outputs.need_update == 'true'
         run: |
-          echo "패치 업데이트 시도 중..."
-          PATCH_RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
-            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "value": "${{ steps.latest.outputs.patch }}",
-              "target": ["production"]
-            }')
+          echo "⏳ 패치 업데이트 시도 중..."
 
-          if [ "$PATCH_RESPONSE_CODE" = "404" ]; then
-            echo "환경변수가 없어 새로 생성합니다."
+          EXISTING_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
+            | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH" and .target[]=="production") | .id')
+
+          if [ -n "$EXISTING_ID" ]; then
+            echo "🔄 기존 변수 존재, PATCH로 업데이트합니다."
+            curl -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
+              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "value": "${{ steps.latest.outputs.patch }}",
+                "target": ["production"]
+              }'
+          else
+            echo "📦 환경변수가 없어 새로 생성합니다."
             curl -X POST "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
               -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               -H "Content-Type: application/json" \
@@ -65,11 +70,6 @@ jobs:
                 "target": ["production"],
                 "type": "plain"
               }'
-          elif [ "$PATCH_RESPONSE_CODE" = "200" ]; then
-            echo "패치 환경변수 업데이트 완료"
-          else
-            echo "알 수 없는 오류 발생 (HTTP $PATCH_RESPONSE_CODE)"
-            exit 1
           fi
 
       - name: Trigger Vercel Deploy
