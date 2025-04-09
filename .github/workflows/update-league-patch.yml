@@ -2,7 +2,7 @@ name: Update League Patch & Vercel Env
 
 on:
   schedule:
-    - cron: '0 3,9,15,21 * * *' # 한국시간 기준 매일 12시, 18시, 자정, 6시 실행
+    - cron: '0 3,9,15,21 * * *'  # KST 정오 기준 6시간 간격 (UTC 기준: 03, 09, 15, 21시)
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo (선택사항)
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Install Vercel CLI
@@ -26,15 +26,19 @@ jobs:
         id: current
         run: |
           CURRENT=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-          "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env")
-          CURRENT_PATCH=$(echo "$CURRENT" | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH") | .value')
+            "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env")
+
+          CURRENT_PATCH=$(echo "$CURRENT" | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH" and .target[]=="production") | .value')
+          ENV_ID=$(echo "$CURRENT" | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH" and .target[]=="production") | .id')
+
           echo "current_patch=$CURRENT_PATCH" >> $GITHUB_OUTPUT
+          echo "env_id=$ENV_ID" >> $GITHUB_OUTPUT
 
       - name: Check if update is needed
         id: check
         run: |
-          echo "Latest: ${{ steps.latest.outputs.patch }}"
-          echo "Current: ${{ steps.current.outputs.current_patch }}"
+          echo "Latest patch: ${{ steps.latest.outputs.patch }}"
+          echo "Current patch: ${{ steps.current.outputs.current_patch }}"
           if [ "${{ steps.latest.outputs.patch }}" != "${{ steps.current.outputs.current_patch }}" ]; then
             echo "need_update=true" >> $GITHUB_OUTPUT
           else
@@ -46,13 +50,9 @@ jobs:
         run: |
           echo "⏳ 패치 업데이트 시도 중..."
 
-          EXISTING_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-            "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
-            | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH" and .target[]=="production") | .id')
-
-          if [ -n "$EXISTING_ID" ]; then
+          if [ -n "${{ steps.current.outputs.env_id }}" ]; then
             echo "🔄 기존 변수 존재, PATCH로 업데이트합니다."
-            curl -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
+            curl -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/${{ steps.current.outputs.env_id }}" \
               -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d '{
