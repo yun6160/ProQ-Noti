@@ -2,8 +2,7 @@ name: Update League Patch & Vercel Env
 
 on:
   schedule:
-    # 매일 KST 기준 00:00, 06:00, 12:00, 18:00에 실행
-    - cron: '0 3,9,15,21 * * *'  # ✅ UTC 기준: 03:00, 09:00, 15:00, 21:00
+    - cron: '0 3,9,15,21 * * *' # 매일 한국시간 기준 12시/18시/자정/6시 실행 (UTC 기준)
   workflow_dispatch:
 
 jobs:
@@ -11,67 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get latest patch version from KR
-        id: fetch_patch
+      - name: Get latest League patch
+        id: latest
         run: |
           PATCH=$(curl -s https://ddragon.leagueoflegends.com/realms/kr.json | jq -r '.v')
-          echo "Latest patch: $PATCH"
           echo "patch=$PATCH" >> $GITHUB_OUTPUT
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel
-
-      - name: Get current patch from Vercel env
-        id: current_env
+      - name: Fetch current patch from Vercel env
+        id: current
         run: |
           CURRENT=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-            https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env | \
-            jq -r '.env[] | select(.key == "NEXT_PUBLIC_LEAGUE_PATCH") | .value')
+          "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env") 
 
-          echo "Current patch in Vercel: $CURRENT"
-          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+          CURRENT_PATCH=$(echo "$CURRENT" | jq -r '.envs[] | select(.key=="NEXT_PUBLIC_LEAGUE_PATCH") | .value')
+          echo "current_patch=$CURRENT_PATCH" >> $GITHUB_OUTPUT
 
-      - name: Compare patch versions and decide
-        id: should_update
+      - name: Check if update is needed
+        id: check
         run: |
-          if [ "${{ steps.fetch_patch.outputs.patch }}" != "${{ steps.current_env.outputs.current }}" ]; then
-            echo "should_deploy=true" >> $GITHUB_OUTPUT
-            echo "패치 버전이 변경되어 배포를 진행합니다."
+          echo "Latest: ${{ steps.latest.outputs.patch }}"
+          echo "Current: ${{ steps.current.outputs.current_patch }}"
+          if [ "${{ steps.latest.outputs.patch }}" != "${{ steps.current.outputs.current_patch }}" ]; then
+            echo "need_update=true" >> $GITHUB_OUTPUT
           else
-            echo "should_deploy=false" >> $GITHUB_OUTPUT
-            echo "패치 버전이 동일하여 배포를 건너뜁니다."
+            echo "need_update=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Update env var (PATCH or POST)
-        if: steps.should_update.outputs.should_deploy == 'true'
+      - name: Update NEXT_PUBLIC_LEAGUE_PATCH env var in Vercel
+        if: steps.check.outputs.need_update == 'true'
         run: |
-          echo "환경변수 업데이트..."
-          PATCH_RESULT=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
+          echo "Updating Vercel env var..."
+          curl -X PATCH "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env/NEXT_PUBLIC_LEAGUE_PATCH" \
           -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
           -H "Content-Type: application/json" \
           -d '{
-            "value": "${{ steps.fetch_patch.outputs.patch }}",
+            "value": "${{ steps.latest.outputs.patch }}",
             "target": ["production"]
-          }')
-
-          if [ "$PATCH_RESULT" = "404" ]; then
-            echo "Creating new NEXT_PUBLIC_LEAGUE_PATCH env var..."
-            curl -X POST "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
-              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d '{
-                "key": "NEXT_PUBLIC_LEAGUE_PATCH",
-                "value": "${{ steps.fetch_patch.outputs.patch }}",
-                "target": ["production"],
-                "type": "plain"
-              }'
-          else
-            echo "Updated NEXT_PUBLIC_LEAGUE_PATCH to ${{ steps.fetch_patch.outputs.patch }}"
-          fi
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          }'
 
       - name: Trigger Vercel Deploy
-        if: steps.should_update.outputs.should_deploy == 'true'
-        run: vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
+        if: steps.check.outputs.need_update == 'true'
+        run: |
+          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
