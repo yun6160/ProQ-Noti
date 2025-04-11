@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import useOutsideClick from '@/utils/hooks/useOutsideClick';
+import useOutsideClick from '@/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
 import { gamerInfo, ISubscribeItem } from '@/types';
 import { useSelector } from 'react-redux';
@@ -54,6 +54,7 @@ export default function SubscribeList({ list }: { list: gamerInfo[] }) {
           id={item.id}
           puuid={item.puuid}
           summoner_name={item.summoner_name}
+          summoner_id={item.summoner_id}
           tag_line={item.tag_line}
           loggedIn={loggedIn}
         />

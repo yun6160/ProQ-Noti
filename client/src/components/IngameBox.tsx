@@ -10,28 +10,29 @@ import { useToast } from '@/hooks/use-toast';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImage';
+import { useLiveGameBySummonerId } from '@/hooks/useLiveGameBySummonerId';
 
 export default function IngameBox({
   pro_name,
   summoner_name,
+  summoner_id,
   tag_line,
   is_online,
   isSubscribe: initialIsSubscribe,
   isOpen,
   onBoxClick,
   loggedIn
-}: IIngameBoxProps) {
+}: IIngameBoxProps ) {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(
     initialIsSubscribe ?? false
   );
   const { toast } = useToast();
-  const champion = 'Aatrox'
-  const spells = ['SummonerFlash', 'SummonerTeleport']
-  const runes = [
-    'perk-images/Styles/Domination/Electrocute/Electrocute.png',
-    'perk-images/Styles/Domination/Electrocute/Electrocute.png'
-  ]
   const version = process.env.NEXT_PUBLIC_LEAGUE_PATCH || '15.7.1'
+  const { data: liveGame } = useLiveGameBySummonerId(summoner_id);
+
+  const participant = liveGame?.participants?.find(
+    (item: any) => item.summonerName === summoner_name
+  );
 
   const handleSubscribeClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -64,13 +65,15 @@ export default function IngameBox({
           )}
         </button>
       </div>
-      {isOpen && (
+      {isOpen && participant && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
-          {/* 챔피언, 스펠 2개, 룬 2개 */}
           <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
-            <ChampionImage championName={champion} version={version} />
-            <SpellImages spellNames={spells} version={version} />
-            <RuneImages runePaths={runes} />
+            <ChampionImage championName={participant.championId.toString()} version={version} />
+            <SpellImages spellNames={[`Summoner${participant.spell1Id}`, `Summoner${participant.spell2Id}`]} version={version} />
+            <RuneImages runePaths={[
+              `perk-images/Styles/${participant.perks.perkStyle}/1.png`,
+              `perk-images/Styles/${participant.perks.perkSubStyle}/2.png`
+            ]} />
           </div>
           <div className="text-body2Bold">
             {summoner_name}
