@@ -31,7 +31,7 @@ export default function IngameBox({
     'perk-images/Styles/Domination/Electrocute/Electrocute.png',
     'perk-images/Styles/Domination/Electrocute/Electrocute.png'
   ]
-  const version = process.env.NEXT_PUBLIC_LEAGUE_PATCH || '15.7'
+  const version = process.env.NEXT_PUBLIC_LEAGUE_PATCH || '15.7.1'
 
   const handleSubscribeClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
