@@ -17,7 +17,6 @@ export interface gamerInfo {
   pro_name: string;
   puuid: string;
   summoner_name: string;
-  summoner_id: string;
   tag_line: string;
   team_id?: number | null;
   is_online: boolean;

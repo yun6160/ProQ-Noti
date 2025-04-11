@@ -15,20 +15,20 @@ import { useLiveGameBySummonerId } from '@/hooks/useLiveGameBySummonerId';
 export default function IngameBox({
   pro_name,
   summoner_name,
-  summoner_id,
   tag_line,
   is_online,
   isSubscribe: initialIsSubscribe,
   isOpen,
   onBoxClick,
-  loggedIn
+  loggedIn,
+  puuid,
 }: IIngameBoxProps ) {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(
     initialIsSubscribe ?? false
   );
   const { toast } = useToast();
   const version = process.env.NEXT_PUBLIC_LEAGUE_PATCH || '15.7.1'
-  const { data: liveGame } = useLiveGameBySummonerId(summoner_id);
+  const { data: liveGame } = useLiveGameBySummonerId(puuid);
 
   const participant = liveGame?.participants?.find(
     (item: any) => item.summonerName === summoner_name
