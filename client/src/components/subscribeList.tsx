@@ -3,14 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
-import { gamerInfo, ISubscribeItem } from '@/types';
-import { getIsLoggedIn, isSubscribed } from '@/utils';
+import { gamerInfo } from '@/types';
+import { useIsLoggedIn } from '@/utils/hooks/userAuth';
 
 export default function SubscribeList({ list }: { list: gamerInfo[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const loggedIn = getIsLoggedIn();
+  const loggedIn = useIsLoggedIn();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -30,11 +30,6 @@ export default function SubscribeList({ list }: { list: gamerInfo[] }) {
     handleSetOpenIndex
   );
 
-  const playerList: ISubscribeItem[] = list.map((item) => ({
-    ...item,
-    isSubscribed: isSubscribed(item, String(item.id))
-  }));
-
   if (!mounted) return null;
 
   return (
@@ -42,12 +37,12 @@ export default function SubscribeList({ list }: { list: gamerInfo[] }) {
       ref={containerRef}
       className="flex flex-col gap-5 items-center justify-center w-full h-full"
     >
-      {playerList.map((item, index) => (
+      {list.map((item, index) => (
         <IngameBox
           key={index}
           pro_name={item.pro_name}
           is_online={item.is_online}
-          isSubscribed={item.isSubscribed}
+          is_subscribed={item.is_subscribed}
           isOpen={openIndex === index}
           onBoxClick={() => handleBoxClick(index)}
           id={item.id}

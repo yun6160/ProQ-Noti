@@ -1,6 +1,6 @@
 import { useToast } from '@/hooks/use-toast';
 import { storeLogout } from '@/store/authSlice';
-import { getIsLoggedIn } from '@/utils';
+import { useIsLoggedIn } from '@/utils/hooks/userAuth';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import { signOut } from '@/utils/supabase/actions';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const { toast } = useToast();
-  const isLoggedIn = getIsLoggedIn();
+  const isLoggedIn = useIsLoggedIn();
 
   useOutsideClick(dropdownRef as React.RefObject<HTMLElement>, () =>
     setOpen(false)

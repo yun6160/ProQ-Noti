@@ -173,7 +173,23 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_players_with_subscription: {
+        Args: {
+          team_abbr: string;
+          current_user_id: string | null;
+        };
+        Returns: {
+          id: number;
+          pro_name: string;
+          puuid: string;
+          summoner_name: string;
+          tag_line: string;
+          team_id: number;
+          is_online: boolean;
+          last_online: string | null;
+          is_subscribed: boolean;
+        }[];
+      };
     };
     Enums: {
       [_ in never]: never;

@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { TABLES } from '@/constant/db';
-import { getUserId } from '@/utils';
+import { useUserId } from '@/utils/hooks/userAuth';
 
 export function usePlayerList(team: string) {
   const { toast } = useToast();
@@ -15,7 +15,7 @@ export function usePlayerList(team: string) {
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
     null
   );
-  const userId = getUserId();
+  const userId = useUserId();
 
   // 해당 팀의 team_id 가져오기
   useEffect(() => {
@@ -39,7 +39,7 @@ export function usePlayerList(team: string) {
     isPending: loading,
     error
   } = useQuery<gamerInfo[]>({
-    queryKey: ['players', team],
+    queryKey: ['players', team, userId],
     queryFn: async () => {
       const response = await GET(team, userId ?? undefined);
       if (!Array.isArray(response)) {
@@ -94,7 +94,7 @@ export function usePlayerList(team: string) {
 
                 const newTimer = setTimeout(() => {
                   queryClient.invalidateQueries({
-                    queryKey: ['players', team]
+                    queryKey: ['players', team, userId]
                   });
                   toast({ description: '🎉실시간 업데이트 완료🎉' });
                 }, 1000);

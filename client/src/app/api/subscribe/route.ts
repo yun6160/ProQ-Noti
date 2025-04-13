@@ -6,15 +6,10 @@ import { supabase } from '@/utils/supabase/client';
  * @returns string[]
  */
 export const GET = async (teamAbbr: string, userId?: string) => {
-  const { data, error } = await supabase
-    .from(TABLES.RIOT_PRO_USERS)
-    .select(
-      `*, ${TABLES.TEAMS}!inner(name_abbr), ${TABLES.SUBSCRIBE}(
-      user_id
-    )`
-    )
-    .eq(`${TABLES.TEAMS}.name_abbr`, teamAbbr)
-    .order('position_number', { ascending: true });
+  const { data, error } = await supabase.rpc('get_players_with_subscription', {
+    team_abbr: teamAbbr,
+    current_user_id: userId ?? null
+  });
 
   if (error) {
     return { status: 500, body: { error: 'Internal Server Error' } };
@@ -24,6 +19,7 @@ export const GET = async (teamAbbr: string, userId?: string) => {
 };
 
 /**
+ * @description Get team Id
  * @param teamAbbr
  * @returns number
  */
@@ -39,4 +35,36 @@ export const GET_TEAM_ID = async (teamAbbr: string) => {
   }
 
   return data.id;
+};
+
+/**
+ * @description Subscribe or Unsubscribe
+ * @param userId
+ * @param pro_id
+ * @returns { status: 'subscribed' | 'unsubscribed' }
+ */
+export const POST = async (userId: string, pro_id: number) => {
+  const { data, error } = await supabase
+    .from(TABLES.SUBSCRIBE)
+    .select('id')
+    .match({ user_id: userId, riot_pro_user_id: pro_id });
+
+  if (error) throw new Error('구독 조회 실패');
+
+  if (data && data.length > 0) {
+    const { error: deleteError } = await supabase
+      .from(TABLES.SUBSCRIBE)
+      .delete()
+      .match({ user_id: userId, riot_pro_user_id: pro_id });
+
+    if (deleteError) throw new Error('구독 취소 실패');
+    return { status: 'unsubscribed' };
+  } else {
+    const { error: insertError } = await supabase
+      .from(TABLES.SUBSCRIBE)
+      .insert({ user_id: userId, riot_pro_user_id: pro_id });
+
+    if (insertError) throw new Error('구독 등록 실패');
+    return { status: 'subscribed' };
+  }
 };

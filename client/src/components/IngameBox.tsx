@@ -7,28 +7,33 @@ import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
 import type { IIngameBoxProps } from '@/types';
 import { useToast } from '@/hooks/use-toast';
+import { useUserId } from '@/utils/hooks/userAuth';
+import { POST } from '@/app/api/subscribe/route';
 
 export default function IngameBox({
   pro_name,
   summoner_name,
   tag_line,
   is_online,
-  isSubscribe: initialIsSubscribe,
+  is_subscribed: initialIsSubscribe,
   isOpen,
   onBoxClick,
-  loggedIn
+  loggedIn,
+  id
 }: IIngameBoxProps) {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(
     initialIsSubscribe ?? false
   );
   const { toast } = useToast();
+  const userId = useUserId();
 
-  const handleSubscribeClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (loggedIn) {
+      const result = await POST(userId!, Number(id));
       setIsSubscribe(!isSubscribe);
     } else {
-      toast({ description: '로그인 후 구독버튼을 눌러주세요!' });
+      toast({ description: '로그인 후 구독 버튼을 눌러주세요!' });
     }
   };
 
