@@ -68,7 +68,7 @@ export function usePlayerList(team: string) {
         {
           event: 'UPDATE',
           schema: 'public',
-          table: TABLES.RIOT_PRO_USERS
+          table: TABLES.RIOT_ACCOUNTS
         },
         (payload) => {
           // 예시: players 쿼리 데이터를 가져오기
@@ -85,7 +85,7 @@ export function usePlayerList(team: string) {
           let oldOnline = null;
 
           for (const member of currentMembers) {
-            if (member.id === payload.new?.id) {
+            if (member.id === payload.new?.pro_user_id) {
               oldOnline = member.is_online;
               if (newOnline !== oldOnline) {
                 if (debounceTimer) {

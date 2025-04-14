@@ -9,6 +9,7 @@ export interface IIngameBoxProps extends gamerInfo {
 
 export interface gamerInfo {
   created_at?: string | null;
+  account_id: number;
   id: number;
   pro_name: string;
   puuid: string;

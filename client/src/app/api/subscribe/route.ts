@@ -8,7 +8,7 @@ import { supabase } from '@/utils/supabase/client';
 export const GET = async (teamAbbr: string, userId?: string) => {
   const { data, error } = await supabase.rpc('get_players_with_subscription', {
     team_abbr: teamAbbr,
-    current_user_id: userId ?? null
+    current_user_id: userId ?? undefined
   });
 
   if (error) {
