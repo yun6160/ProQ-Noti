@@ -2,7 +2,6 @@
 'use client';
 
 import { Toaster } from '@/components/ui/toaster';
-import store from '@/store/store';
 import { usePathname } from 'next/navigation';
 
 export default function LayoutRouter({

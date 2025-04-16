@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { TABLES } from '@/constant/db';
+import { useUserId } from '@/utils/hooks/userAuth';
 
 export function usePlayerList(team: string) {
   const { toast } = useToast();
@@ -14,6 +15,7 @@ export function usePlayerList(team: string) {
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
     null
   );
+  const userId = useUserId();
 
   // 해당 팀의 team_id 가져오기
   useEffect(() => {
@@ -34,12 +36,12 @@ export function usePlayerList(team: string) {
 
   const {
     data: members = [],
-    isPending: loading,
+    isLoading: loading,
     error
   } = useQuery<gamerInfo[]>({
-    queryKey: ['players', team],
+    queryKey: ['players', team, userId],
     queryFn: async () => {
-      const response = await GET(team);
+      const response = await GET(team, userId ?? undefined);
       if (!Array.isArray(response)) {
         throw new Error('서버 오류');
       }
@@ -57,7 +59,7 @@ export function usePlayerList(team: string) {
 
   // 선수 online 상태 테이블 실시간 업데이트
   useEffect(() => {
-    if (!team) return;
+    if (!team || loading) return; // 데이터가 로딩 중일 경우 리턴
 
     const channel = supabase
       .channel('realtime-players')
@@ -66,40 +68,61 @@ export function usePlayerList(team: string) {
         {
           event: 'UPDATE',
           schema: 'public',
-          table: TABLES.RIOT_PRO_USERS
+          table: TABLES.RIOT_ACCOUNTS
         },
         (payload) => {
-          // 예시: players 쿼리 데이터를 가져오기
           const currentMembers = queryClient.getQueryData<gamerInfo[]>([
             'players',
             team
           ]);
           if (!currentMembers) return;
 
-          const updatedTeamId = Number(payload.new?.team_id);
-          if (updatedTeamId !== teamId) return;
-
           const newOnline = payload.new?.is_online;
-          let oldOnline = null;
+          const proUserId = payload.new?.pro_user_id;
+          const accountId = payload.new?.id;
 
-          for (const member of currentMembers) {
-            if (member.id === payload.new?.id) {
-              oldOnline = member.is_online;
-              if (newOnline !== oldOnline) {
-                if (debounceTimer) {
-                  clearTimeout(debounceTimer);
-                }
+          // 현재 팀의 선수인지, 선수이면 누구인지 리턴
+          const currentMember = currentMembers.find(
+            (member) => member.id === proUserId
+          );
 
-                const newTimer = setTimeout(() => {
-                  queryClient.invalidateQueries({
-                    queryKey: ['players', team]
-                  });
-                  toast({ description: '🎉실시간 업데이트 완료🎉' });
-                }, 1000);
+          if (!currentMember) return;
 
-                // 타이머 상태 업데이트
-                setDebounceTimer(newTimer);
+          const oldOnline = currentMember.is_online;
+          //새로 받아온게 지금 보는 계정이 아닌 다른 부계정이고 상태가 online이면 새로고침
+          if (currentMember.account_id !== accountId) {
+            if (newOnline) {
+              if (debounceTimer) {
+                clearTimeout(debounceTimer);
               }
+              const newTimer = setTimeout(() => {
+                queryClient.invalidateQueries({
+                  queryKey: ['players', team, userId]
+                });
+                toast({ description: '🎉실시간 업데이트 완료🎉' });
+              }, 3000);
+              // 타이머 상태 업데이트
+              setDebounceTimer(newTimer);
+            }
+          }
+
+          // 새로 받아온 계정이 지금 보는 계정이고 상태가 바뀌었으면
+          if (currentMember.account_id === accountId) {
+            if (newOnline !== oldOnline) {
+              if (debounceTimer) {
+                clearTimeout(debounceTimer);
+              }
+
+              const newTimer = setTimeout(() => {
+                queryClient.invalidateQueries({
+                  queryKey: ['players', team, userId]
+                });
+
+                toast({ description: '🎉실시간 업데이트 완료🎉' });
+              }, 3000);
+
+              // 타이머 상태 업데이트
+              setDebounceTimer(newTimer);
             }
           }
         }
@@ -109,7 +132,7 @@ export function usePlayerList(team: string) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [team, teamId, queryClient]);
+  }, [team, teamId, queryClient, loading]);
 
   return { members, loading };
 }
