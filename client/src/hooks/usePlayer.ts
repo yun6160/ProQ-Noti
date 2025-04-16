@@ -88,8 +88,6 @@ export function usePlayerList(team: string) {
 
           if (!currentMember) return;
 
-          console.log('payload:', payload);
-
           const oldOnline = currentMember.is_online;
           //새로 받아온게 지금 보는 계정이 아닌 다른 부계정이고 상태가 online이면 새로고침
           if (currentMember.account_id !== accountId) {
