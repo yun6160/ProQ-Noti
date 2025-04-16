@@ -49,6 +49,7 @@ export default function SubscribeList({ list }: { list: gamerInfo[] }) {
           puuid={item.puuid}
           summoner_name={item.summoner_name}
           tag_line={item.tag_line}
+          account_id={item.account_id}
           loggedIn={loggedIn}
         />
       ))}
