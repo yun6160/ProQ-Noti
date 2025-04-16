@@ -16,7 +16,8 @@ export default function MyPage() {
       is_online: true,
       created_at: '2024-01-01T12:00:00Z',
       team_id: 101,
-      last_online: null
+      last_online: null,
+      account_id: 1
     },
     {
       id: 2,
@@ -27,7 +28,8 @@ export default function MyPage() {
       is_online: false,
       created_at: '2024-01-02T15:30:00Z',
       team_id: 101,
-      last_online: '2024-03-30T08:45:00Z'
+      last_online: '2024-03-30T08:45:00Z',
+      account_id: 2
     },
     {
       id: 3,
@@ -38,7 +40,8 @@ export default function MyPage() {
       is_online: true,
       created_at: null,
       team_id: null,
-      last_online: null
+      last_online: null,
+      account_id: 3
     }
   ];
 
