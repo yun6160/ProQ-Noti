@@ -1,11 +1,12 @@
 import { useToast } from '@/hooks/use-toast';
-import { isLoggedIn as selectIsLoggedIn, storeLogout } from '@/store/authSlice';
+import { storeLogout } from '@/store/authSlice';
+import { useIsLoggedIn } from '@/utils/hooks/userAuth';
 import useOutsideClick from '@/utils/hooks/useOutsideClick';
 import { signOut } from '@/utils/supabase/actions';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 interface DropdownProps {
   isOpen?: boolean;
@@ -16,7 +17,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const { toast } = useToast();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const isLoggedIn = useIsLoggedIn();
 
   useOutsideClick(dropdownRef as React.RefObject<HTMLElement>, () =>
     setOpen(false)
@@ -26,8 +27,8 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
     signOut();
     dispatch(storeLogout());
     toast({
-      description: "로그아웃 되었습니다."
-    })
+      description: '로그아웃 되었습니다.'
+    });
   };
 
   return (
@@ -39,7 +40,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
         <GiHamburgerMenu size={25} className="text-primary-navy" />
       </button>
       {open && (
-        <div className="absolute top-8 right-0 bg-white shadow-md rounded z-50 border border-gray-300 text-sm text-black w-[5rem]">
+        <div className="absolute top-8 right-0 bg-white shadow-md rounded z-50 border border-gray-300 text-base text-black web:w-[10rem] w-[6rem]">
           <ul className="list-none p-0 m-0">
             <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
               <Link href="/" className="block p-2 text-black no-underline">
@@ -48,7 +49,10 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
             </li>
             {!isLoggedIn && (
               <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
-                <Link href="/login" className="block p-2 text-black no-underline">
+                <Link
+                  href="/login"
+                  className="block p-2 text-black no-underline"
+                >
                   로그인
                 </Link>
               </li>
