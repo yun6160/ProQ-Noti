@@ -30,6 +30,8 @@ export default function IngameBox({
   const version = process.env.NEXT_PUBLIC_LEAGUE_PATCH || '15.7.1'
   const { data: liveGame } = useLiveGameBySummonerId(puuid);
 
+  console.log(liveGame);
+
   const participant = liveGame?.participants?.find(
     (item: any) => item.summonerName === summoner_name
   );
