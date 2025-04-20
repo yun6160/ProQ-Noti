@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import './globals.css';
 import Providers from './provider';
-import Pwa from './_notification/Pwa';
+import Pwa from './Pwa';
 import LayoutRouter from './layoutRouter';
 import AuthProvider from '@/store/AuthProvider';
 

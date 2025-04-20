@@ -11,7 +11,7 @@ function delay(ms: number) {
 
 Deno.serve(async () => {
     const { data: players, error } = await supabase
-        .from(TABLES.RIOT_PRO_USERS)
+        .from(TABLES.RIOT_ACCOUNTS)
         .select("*")
         .order("last_checked_at", { ascending: true })
         .limit(25)
@@ -26,18 +26,35 @@ Deno.serve(async () => {
     let failCount = 0;
 
     for (const player of players) {
-        const { id, pro_name, puuid } = player;
+        const { id, summor_name, puuid } = player;
         const url = `https://kr.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${puuid}?api_key=${RIOT_API_KEY}`;
 
         await delay(150);
 
         try {
             const res = await fetch(url);
+            if (!res.ok) {
+                if (res.status === 403) {
+                    console.error("❌ Riot API 키가 잘못되었습니다.");
+                    return new Response(JSON.stringify({ error: "Riot API key unauthorized (403)" }), {
+                        status: 403,
+                        headers: { "Content-Type": "application/json" },
+                    });
+                }
+                if (res.status === 400) {
+                    console.error("❌ Riot API 키가 만료되었습니다.");
+                    return new Response(JSON.stringify({ error: "Riot API key expired or unauthorized (401)" }), {
+                        status: 400,
+                        headers: { "Content-Type": "application/json" },
+                    });
+                }
+            }
+
             const is_online = res.status === 200;
             const last_online = is_online ? new Date().toISOString() : player.last_online;
 
             const { error: updateError } = await supabase
-                .from(TABLES.RIOT_PRO_USERS)
+                .from(TABLES.RIOT_ACCOUNTS)
                 .update({
                     is_online,
                     last_online,
@@ -47,13 +64,13 @@ Deno.serve(async () => {
 
             if (updateError) {
                 failCount++;
-                console.error(`❌ [${pro_name}] DB 업데이트 실패:`, updateError);
+                console.error(`❌ [${summor_name}, ${id}] DB 업데이트 실패:`, updateError);
             } else {
                 successCount++;
             }
         } catch (e) {
             failCount++;
-            console.error(`🔥 [${pro_name}] Riot API 호출 실패:`, e);
+            console.error(`🔥 [${summor_name}, ${id}] Riot API 호출 실패:`, e);
         }
     }
 

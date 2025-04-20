@@ -1,11 +1,7 @@
 {
   /* 선수 정보 & 인게임 정보 */
 }
-export interface ISubscribeItem extends gamerInfo {
-  isSubscribe: boolean;
-}
-
-export interface IIngameBoxProps extends ISubscribeItem {
+export interface IIngameBoxProps extends gamerInfo {
   isOpen: boolean;
   onBoxClick: () => void;
   loggedIn: boolean;
@@ -13,6 +9,7 @@ export interface IIngameBoxProps extends ISubscribeItem {
 
 export interface gamerInfo {
   created_at?: string | null;
+  account_id: number;
   id: number;
   pro_name: string;
   puuid: string;
@@ -21,4 +18,5 @@ export interface gamerInfo {
   team_id?: number | null;
   is_online: boolean;
   last_online?: string | null;
+  is_subscribed?: boolean;
 }
