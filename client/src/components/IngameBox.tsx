@@ -12,6 +12,7 @@ import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImage';
+import { getRunePath, getSpellName } from '@/utils/hooks/lol';
 
 export default function IngameBox({
   pro_name,
@@ -28,14 +29,14 @@ export default function IngameBox({
   const [isSubscribe, setIsSubscribe] = useState<boolean>(
     initialIsSubscribe ?? false
   );
+  const [hasFetched, setHasFetched] = useState(false);
   const [liveGame, setLiveGame] = useState<any>(null);
-
   const { toast } = useToast();
-  const version = process.env.NEXT_PUBLIC_LEAGUE_PATCH || '15.7.1';
+  const version = process.env.NEXT_PUBLIC_LEAGUE_PATCH || '15.8.1';
   const userId = useUserId();
 
   useEffect(() => {
-    if (!puuid || !isOpen) return;
+    if (!puuid || !isOpen || hasFetched) return;
     fetch(`/api/live-game?summonerId=${puuid}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
@@ -44,16 +45,25 @@ export default function IngameBox({
         } else {
           setLiveGame(null);
         }
+        setHasFetched(true);
       });
-  }, [puuid, isOpen]);
+  }, [puuid, isOpen, hasFetched]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHasFetched(false);
+    }
+  }, [isOpen]);
 
   const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
-  const spellNames = player ? [player.spell1Name, player.spell2Name] : [];
-  const runePaths =
-  player?.perks?.styles?.[0]?.selections
-    ? player.perks.styles[0].selections.slice(0, 2).map((s: any) => s.icon)
+  const spellNames = player
+    ? ([getSpellName(player.spell1Id), getSpellName(player.spell2Id)].filter(Boolean) as string[])
     : [];
 
+  const runePaths = player?.perks?.perkIds
+    ? player.perks.perkIds.slice(0, 2).map((id: number) => getRunePath(id))
+    : [];
+    
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (loggedIn) {
