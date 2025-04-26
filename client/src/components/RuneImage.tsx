@@ -1,7 +1,7 @@
 'use client'
 
 interface RuneImagesProps {
-  runePaths: string[]
+  runePaths: string[];
 }
 
 export default function RuneImages({ runePaths }: RuneImagesProps) {

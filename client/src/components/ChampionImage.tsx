@@ -8,9 +8,9 @@ interface ChampionImageProps {
 export default function ChampionImage({ championName, version }: ChampionImageProps) {
   return (
     <img
-      className="h-full object-contain"
+      className="object-contain h-full"
       src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championName}.png`}
       alt={championName}
     />
-  )
+  );
 }

@@ -73,6 +73,7 @@ export default function IngameBox({
       toast({ description: '로그인 후 구독 버튼을 눌러주세요!' });
     }
   };
+  console.log(player.championName);
 
   return (
     <div className="flex flex-col gap-[0.875rem]">
@@ -111,7 +112,7 @@ export default function IngameBox({
             <div className="flex gap-1 items-center">
               <FaHourglassStart className="text-primary-mint" />
               {(liveGame?.gameLength / 60).toFixed(1)}분
-            </div>
+            </div> 
             <div>큐 타입 {liveGame?.gameQueueConfigId}</div>
           </div>
         </div>
