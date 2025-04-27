@@ -1,8 +1,8 @@
 'use client'
 
 interface ChampionImageProps {
-  championName: string
-  version: string
+  championName: string | undefined;
+  version: string;
 }
 
 export default function ChampionImage({ championName, version }: ChampionImageProps) {

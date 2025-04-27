@@ -12,7 +12,8 @@ import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImage';
-import { getRunePath, getSpellName } from '@/utils/hooks/lol';
+import { getChampionName, getRunePath, getSpellName } from '@/utils/hooks/lol';
+import { formatGameLength } from '@/utils/hooks/formatGameLegnth';
 
 export default function IngameBox({
   pro_name,
@@ -56,6 +57,7 @@ export default function IngameBox({
   }, [isOpen]);
 
   const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
+  const championName = player ? getChampionName(player.championId) : undefined;
   const spellNames = player
     ? ([getSpellName(player.spell1Id), getSpellName(player.spell2Id)].filter(Boolean) as string[])
     : [];
@@ -73,7 +75,14 @@ export default function IngameBox({
       toast({ description: '로그인 후 구독 버튼을 눌러주세요!' });
     }
   };
-  console.log(player.championName);
+
+  useEffect(() => {
+    if (player) {
+      console.log('✅ Champion Name:', championName);
+      console.log('✅ Spell IDs:', player.spell1Id, player.spell2Id);
+      console.log('✅ Rune Perk IDs:', player.perks?.perkIds);
+    }
+  }, [player]);
 
   return (
     <div className="flex flex-col gap-[0.875rem]">
@@ -100,7 +109,7 @@ export default function IngameBox({
       {isOpen && player && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
           <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
-            <ChampionImage championName={player.championName} version={version} />
+            <ChampionImage championName={championName} version={version} />
             <SpellImages spellNames={spellNames} version={version} />
             <RuneImages runePaths={runePaths} />
           </div>
@@ -111,8 +120,8 @@ export default function IngameBox({
           <div className="flex justify-between w-full text-body2">
             <div className="flex gap-1 items-center">
               <FaHourglassStart className="text-primary-mint" />
-              {(liveGame?.gameLength / 60).toFixed(1)}분
-            </div> 
+              {liveGame && formatGameLength(liveGame.gameLength)}
+            </div>
             <div>큐 타입 {liveGame?.gameQueueConfigId}</div>
           </div>
         </div>
