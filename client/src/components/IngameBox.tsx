@@ -63,7 +63,7 @@ export default function IngameBox({
     : [];
 
   const runePaths = player?.perks?.perkIds
-    ? player.perks.perkIds.slice(0, 2).map((id: number) => getRunePath(id))
+    ? player.perks.perkIds.slice(0, 2)
     : [];
     
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
