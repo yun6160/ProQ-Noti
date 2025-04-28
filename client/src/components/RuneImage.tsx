@@ -5,7 +5,6 @@ interface RuneImagesProps {
 }
 
 export default function RuneImages({ runePaths }: RuneImagesProps) {
-
   return (
     <div className="overflow-hidden h-full flex flex-col gap-1">
       {runePaths.map((perkId, i) => (

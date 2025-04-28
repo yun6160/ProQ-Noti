@@ -76,14 +76,6 @@ export default function IngameBox({
     }
   };
 
-  useEffect(() => {
-    if (player) {
-      console.log('✅ Champion Name:', championName);
-      console.log('✅ Spell IDs:', player.spell1Id, player.spell2Id);
-      console.log('✅ Rune Perk IDs:', player.perks?.perkIds);
-    }
-  }, [player]);
-
   return (
     <div className="flex flex-col gap-[0.875rem]">
       <div
