@@ -14,9 +14,8 @@ export default function RuneImages({ runePaths }: RuneImagesProps) {
         return (
           <img
             key={i}
-            // className="object-contain h-1/2"
-            className="w-5 h-5"
-            src={`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/${getRunePath(perkId)}.png`}
+            className="object-contain h-1/2"
+            src={`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/${getRunePath(perkId).toLowerCase()}.png`}
             alt={`rune-${perkId}`}
           />
         );

@@ -12,7 +12,7 @@ import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImage';
-import { getRunePath, getSpellName } from '@/utils/hooks/lol';
+import { getSpellName } from '@/utils/hooks/lol';
 import { formatGameLength } from '@/utils/hooks/formatGameLegnth';
 
 export default function IngameBox({
@@ -56,14 +56,18 @@ export default function IngameBox({
   }, [isOpen]);
 
   const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
-  const championName = player.championId;
-  const spellNames = player
-    ? ([getSpellName(player.spell1Id), getSpellName(player.spell2Id)].filter(Boolean) as string[])
+  const championId = player ? player.championId : null;
+  const spellIds = player
+    ? ([player.spell1Id, player.spell2Id])
     : [];
 
   const runePaths = player?.perks?.perkIds
-    ? player.perks.perkIds.slice(0, 2)
+    ? player.perks.perkIds
     : [];
+
+    console.log("챔피언", championId)
+    console.log("룬", runePaths)
+    console.log("스펠", spellIds)
     
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -100,8 +104,8 @@ export default function IngameBox({
       {isOpen && player && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
           <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
-            <ChampionImage championName={championName} />
-            <SpellImages spellNames={spellNames} />
+            <ChampionImage championId={championId} />
+            <SpellImages spellIds={spellIds} />
             <RuneImages runePaths={runePaths} />
           </div>
           <div className="text-body2Bold">

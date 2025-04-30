@@ -1,15 +1,15 @@
-export const spellIdToName: Record<number, string> = {
-  1: 'summonerbarrier',
-  3: 'summonerignite',
+const spellIdToFileName: Record<number, string> = {
   4: 'summoner_flash',
   6: 'summoner_haste',
   7: 'summoner_heal',
   11: 'summoner_smite',
   12: 'summoner_teleport_new',
-  13: 'summonermana'
-};
+  21: 'summonerbarrier',
+  14: 'summonerignite',
+  13: 'summonermana',
+}
 
-export const getSpellName = (id: number): string | undefined => spellIdToName[id];
+export const getSpellName = (id: number): string | undefined => spellIdToFileName[id];
 
 const perkIdToPath: Record<number, string> = {
   8100: 'styles/domination/domination',

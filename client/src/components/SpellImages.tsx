@@ -1,21 +1,25 @@
 'use client'
 
+import { getSpellName } from "@/utils/hooks/lol";
+
 interface SpellImagesProps {
-  spellNames: string[]
+  spellIds: number[];
 }
 
-export default function SpellImages({ spellNames }: SpellImagesProps) {
+export default function SpellImages({ spellIds }: SpellImagesProps) {
   return (
     <div className="overflow-hidden h-full flex flex-col gap-1">
-      {spellNames.map((spell, i) => (
-        <img
-          key={`${spell}-${i}`}
-          // className="object-contain h-1/2"
-          className="w-5 h-5"
-          src={`https://raw.communitydragon.org/latest/game/data/spells/icons2d/${spell.toLowerCase()}.png`}
-          alt={spell}
-        />
-      ))}
+      {spellIds.map((spell, i) => {
+        const fileName = getSpellName(spell);
+        return (
+          <img
+            key={`${spell}-${i}`}
+            className="object-contain h-1/2"
+            src={`https://raw.communitydragon.org/latest/game/data/spells/icons2d/${fileName}.png`}
+            alt={`spell-${spell}`}
+          />
+        )
+      })}
     </div>
   )
 }
