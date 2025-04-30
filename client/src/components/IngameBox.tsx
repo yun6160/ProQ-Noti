@@ -58,16 +58,12 @@ export default function IngameBox({
   const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
   const championId = player ? player.championId : null;
   const spellIds = player
-    ? ([player.spell1Id, player.spell2Id])
-    : [];
+  ? ([player.spell1Id, player.spell2Id])
+  : [];
 
   const runePaths = player?.perks?.perkIds
-    ? player.perks.perkIds
+    ? player.perks.perkIds.slice(0, 2)
     : [];
-
-    console.log("챔피언", championId)
-    console.log("룬", runePaths)
-    console.log("스펠", spellIds)
     
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -117,7 +113,7 @@ export default function IngameBox({
               <FaHourglassStart className="text-primary-mint" />
               {liveGame && formatGameLength(liveGame.gameLength)}
             </div>
-            <div>큐 타입 {liveGame?.gameQueueConfigId}</div>
+            <div>큐 타입: {liveGame?.gameMode ? "rank" : ""}</div>
           </div>
         </div>
       )}
