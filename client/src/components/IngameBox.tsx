@@ -12,8 +12,7 @@ import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImage';
-import { getSpellName } from '@/utils/hooks/lol';
-import { formatGameLength } from '@/utils/hooks/formatGameLegnth';
+import { gameModeMap } from '@/utils/hooks/lol';
 
 export default function IngameBox({
   pro_name,
@@ -111,9 +110,16 @@ export default function IngameBox({
           <div className="flex justify-between w-full text-body2">
             <div className="flex gap-1 items-center">
               <FaHourglassStart className="text-primary-mint" />
-              {liveGame && formatGameLength(liveGame.gameLength)}
+              {liveGame && (
+                <div>
+                  {Math.floor((Date.now() / 1000 - liveGame.gameStartTime) / 60)}분 전 시작
+                </div>
+              )}
             </div>
-            <div>큐 타입: {liveGame?.gameMode ? "rank" : ""}</div>
+            <div>
+              큐 타입:
+              {gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}
+            </div>
           </div>
         </div>
       )}

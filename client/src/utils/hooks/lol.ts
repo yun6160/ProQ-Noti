@@ -73,3 +73,10 @@ const perkIdToPath: Record<number, string> = {
 
 export const getRunePath = (perkId: number): string =>
   (perkIdToPath[perkId]?.toLowerCase()) || `perk-images/perks/${perkId}.png`;
+
+export const gameModeMap = {
+  CLASSIC: "솔로랭크",
+  CHERRY: "아레나",
+  ARAM: "칼바람",
+  URF: "우르프"
+};
