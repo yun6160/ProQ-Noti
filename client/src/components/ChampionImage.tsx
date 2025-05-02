@@ -1,16 +1,15 @@
 'use client'
 
 interface ChampionImageProps {
-  championName: string
-  version: string
+  championId: number | undefined;
 }
 
-export default function ChampionImage({ championName, version }: ChampionImageProps) {
+export default function ChampionImage({ championId }: ChampionImageProps) {
   return (
     <img
-      className="h-full object-contain"
-      src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championName}.png`}
-      alt={championName}
+      className="object-contain h-full"
+      src={`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`}
+      alt={`champion-${championId}`}
     />
-  )
+  );
 }

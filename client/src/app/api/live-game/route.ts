@@ -29,6 +29,7 @@ export async function GET(req: Request) {
     }
 
     const data = await res.json();
+
     return NextResponse.json({ inGame: true, game: data });
   } catch (err) {
     return NextResponse.json({ error: '서버 오류가 발생했습니다.' }, { status: 500 });

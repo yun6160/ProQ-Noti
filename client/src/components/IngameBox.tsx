@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent, useEffect } from 'react';
 import LiveIcon from '@/app/assets/icons/live.svg';
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
@@ -9,6 +9,10 @@ import type { IIngameBoxProps } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { useUserId } from '@/utils/hooks/userAuth';
 import { POST } from '@/app/api/subscribe/route';
+import ChampionImage from './ChampionImage';
+import SpellImages from './SpellImages';
+import RuneImages from './RuneImage';
+import { gameModeMap } from '@/utils/hooks/lol';
 
 export default function IngameBox({
   pro_name,
@@ -25,9 +29,41 @@ export default function IngameBox({
   const [isSubscribe, setIsSubscribe] = useState<boolean>(
     initialIsSubscribe ?? false
   );
+  const [hasFetched, setHasFetched] = useState(false);
+  const [liveGame, setLiveGame] = useState<any>(null);
   const { toast } = useToast();
   const userId = useUserId();
 
+  useEffect(() => {
+    if (!puuid || !isOpen || hasFetched) return;
+    fetch(`/api/live-game?summonerId=${puuid}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.inGame) {
+          setLiveGame(json.game);
+        } else {
+          setLiveGame(null);
+        }
+        setHasFetched(true);
+      });
+  }, [puuid, isOpen, hasFetched]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHasFetched(false);
+    }
+  }, [isOpen]);
+
+  const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
+  const championId = player ? player.championId : null;
+  const spellIds = player
+  ? ([player.spell1Id, player.spell2Id])
+  : [];
+
+  const runePaths = player?.perks?.perkIds
+    ? player.perks.perkIds.slice(0, 2)
+    : [];
+    
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (loggedIn) {
@@ -60,46 +96,30 @@ export default function IngameBox({
           )}
         </button>
       </div>
-      {isOpen && (
+      {isOpen && player && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
-          {/* 챔피언, 스펠 2개, 룬 2개 */}
-          <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center ">
-            <img
-              className="h-full object-contain"
-              src="https://ddragon.leagueoflegends.com/cdn/15.4.1/img/champion/Aatrox.png"
-            ></img>
-            <div className="overflow-hidden h-full flex flex-col gap-1">
-              <img
-                className="object-contain h-1/2"
-                src="https://ddragon.leagueoflegends.com/cdn/15.4.1/img/spell/SummonerFlash.png"
-              ></img>
-              <img
-                className="object-contain h-1/2"
-                src="https://ddragon.leagueoflegends.com/cdn/15.4.1/img/spell/SummonerFlash.png"
-              ></img>
-            </div>
-            <div className="overflow-hidden h-full flex flex-col gap-1">
-              <img
-                className="object-contain h-1/2"
-                src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Domination/Electrocute/Electrocute.png"
-              ></img>
-              <img
-                className="object-contain h-1/2"
-                src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Domination/Electrocute/Electrocute.png"
-              ></img>
-            </div>
+          <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
+            <ChampionImage championId={championId} />
+            <SpellImages spellIds={spellIds} />
+            <RuneImages runePaths={runePaths} />
           </div>
           <div className="text-body2Bold">
             {summoner_name}
             {tag_line && `#${tag_line}`}
           </div>
-          {/* 녹화랑 큐 타입 */}
           <div className="flex justify-between w-full text-body2">
             <div className="flex gap-1 items-center">
               <FaHourglassStart className="text-primary-mint" />
-              시간
+              {liveGame && (
+                <div>
+                  {Math.floor((Date.now() / 1000 - liveGame.gameStartTime) / 60)}분 전 시작
+                </div>
+              )}
             </div>
-            <div>큐 타입</div>
+            <div>
+              큐 타입:
+              {gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}
+            </div>
           </div>
         </div>
       )}
