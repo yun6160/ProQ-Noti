@@ -1,0 +1,82 @@
+const spellIdToFileName: Record<number, string> = {
+  4: 'summoner_flash',
+  6: 'summoner_haste',
+  7: 'summoner_heal',
+  11: 'summoner_smite',
+  12: 'summoner_teleport_new',
+  21: 'summonerbarrier',
+  14: 'summonerignite',
+  13: 'summonermana',
+}
+
+export const getSpellName = (id: number): string | undefined => spellIdToFileName[id];
+
+const perkIdToPath: Record<number, string> = {
+  8100: 'styles/domination/domination',
+  8300: 'styles/inspiration/inspiration',
+  8000: 'styles/precision/precision',
+  8400: 'styles/resolve/resolve',
+  8200: 'styles/sorcery/sorcery',
+  8105: 'styles/domination/electrocute/electrocute',
+  8112: 'styles/domination/electrocute/electrocute',
+  8124: 'styles/domination/predator/predator',
+  8120: 'styles/domination/domination',
+  8206: 'styles/sorcery/sorcery',
+  8210: 'styles/sorcery/nullifyingorb/nullifyingorb',
+  8224: 'styles/sorcery/theultimateshattersphere/theultimateshattersphere',
+  8226: 'styles/sorcery/arcanecomet/arcanecomet',
+  8234: 'styles/sorcery/clarity/clarity',
+  8236: 'styles/sorcery/waterwalking/waterwalking',
+  8436: 'styles/resolve/ironmantle/ironmantle',
+  8444: 'styles/resolve/secondwind/secondwind',
+  8446: 'styles/resolve/demolish/demolish',
+  8451: 'styles/resolve/fontoflife/fontoflife',
+  8453: 'styles/resolve/revitalize/revitalize',
+  8463: 'styles/resolve/zombieward/zombieward',
+  8465: 'styles/resolve/guardian/guardian',
+  8473: 'styles/resolve/boneplating/boneplating',
+  9105: 'styles/precision/legendtenacity/legendtenacity',
+  9110: 'styles/precision/cutdown/cutdown',
+  8134: 'styles/domination/ingenioushunter/ingenioushunter',
+  8136: 'styles/domination/zombieward/zombieward',
+  8009: 'styles/precision/presenceofmind/presenceofmind',
+  8016: 'styles/precision/laststand/laststand',
+  8237: 'styles/sorcery/scorch/scorch',
+  8410: 'styles/resolve/unflinching/unflinching',
+  8313: 'styles/inspiration/hextechflashtraption/hextechflashtraption',
+  8316: 'styles/inspiration/miniondematerializer/miniondematerializer',
+  8321: 'styles/inspiration/futuresmarket/futuresmarket',
+  8326: 'styles/inspiration/timewarptonic/timewarptonic',
+  8345: 'styles/inspiration/biscuitdelivery/biscuitdelivery',
+  8005: 'styles/precision/presstheattack/presstheattack',
+  8008: 'styles/precision/lethaltempo/lethaltempotemp',
+  8021: 'styles/precision/fleetfootwork/fleetfootwork',
+  8010: 'styles/precision/conqueror/conqueror',
+  9111: 'styles/precision/overheal/overheal',
+  9101: 'styles/precision/triumph/triumph',
+  9103: 'styles/precision/legendbloodline/legendbloodline',
+  9104: 'styles/precision/legendalacrity/legendalacrity',
+  8014: 'styles/precision/coupdegrace/coupdegrace',
+  8017: 'styles/inspiration/magicalfootwear/magicalfootwear',
+  8347: 'styles/inspiration/cosmicinsight/cosmicinsight',
+  8128: 'styles/domination/darkharvest/darkharvest',
+  8126: 'styles/domination/cheapshot/cheapshot',
+  8138: 'styles/domination/eyeballcollection/eyeballcollection',
+  8135: 'styles/domination/ravenoushunter/ravenoushunter',
+  8214: 'styles/sorcery/summonaery/summonaery',
+  8229: 'styles/sorcery/arcanecomet/arcanecomet',
+  8230: 'styles/sorcery/phaserush/phaserush',
+  5005: 'statmods/statmodsattackspeedicon',
+  5008: 'statmods/statmodsadaptiveforceicon',
+  5011: 'statmods/statmodsscalinghealthicon'
+};
+
+export const getRunePath = (perkId: number): string =>
+  (perkIdToPath[perkId]?.toLowerCase()) || `perk-images/perks/${perkId}.png`;
+
+export const gameModeMap = {
+  CLASSIC: "솔로랭크",
+  CHERRY: "아레나",
+  ARAM: "칼바람",
+  URF: "우르프"
+};
