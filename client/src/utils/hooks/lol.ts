@@ -7,6 +7,26 @@ const spellIdToFileName: Record<number, string> = {
   21: 'summonerbarrier',
   14: 'summonerignite',
   13: 'summonermana',
+  1: 'summoner_boost',
+  3: 'summoner_exhaust',
+  32: 'summoner_mark',
+  39: 'summoner_cleanse',
+  54: 'summoner_teleport',
+  55: 'summoner_snowball',
+  31: 'summoner_poro',
+  28: 'summoner_flashfrost',
+  30: 'summoner_snowball',
+  36: 'summoner_prison',
+  38: 'summoner_teleport',
+  59: 'summoner_snowball',
+  60: 'summoner_snowball',
+  61: 'summoner_snowball',
+  62: 'summoner_snowball',
+  63: 'summoner_snowball',
+  64: 'summoner_snowball',
+  65: 'summoner_snowball',
+  66: 'summoner_snowball',
+  67: 'summoner_snowball'
 }
 
 export const getSpellName = (id: number): string | undefined => spellIdToFileName[id];
@@ -68,7 +88,29 @@ const perkIdToPath: Record<number, string> = {
   8230: 'styles/sorcery/phaserush/phaserush',
   5005: 'statmods/statmodsattackspeedicon',
   5008: 'statmods/statmodsadaptiveforceicon',
-  5011: 'statmods/statmodsscalinghealthicon'
+  5011: 'statmods/statmodsscalinghealthicon',
+  8001: 'styles/precision/pressetheattack/pressetheattack',
+  8002: 'styles/precision/lethaltempo/lethaltempo',
+  8003: 'styles/precision/fleetfootwork/fleetfootwork',
+  8004: 'styles/precision/conqueror/conqueror',
+  8101: 'styles/domination/electrocute/electrocute',
+  8102: 'styles/domination/cheapshot/cheapshot',
+  8103: 'styles/domination/eyeballcollection/eyeballcollection',
+  8104: 'styles/domination/ravenoushunter/ravenoushunter',
+  8106: 'styles/domination/huntertitan/huntertitan',
+  8107: 'styles/domination/hunterprey/hunterprey',
+  8201: 'styles/sorcery/arcanecomet/arcanecomet',
+  8202: 'styles/sorcery/phaseRush/phaserush',
+  8203: 'styles/sorcery/groundingorb/groundingorb',
+  8204: 'styles/sorcery/guardian/guardian',
+  8301: 'styles/inspiration/glacialaugment/glacialaugment',
+  8302: 'styles/inspiration/unsealedspellbook/unsealedspellbook',
+  8303: 'styles/inspiration/firststrike/firststrike',
+  8304: 'styles/inspiration/kleptomancy/kleptomancy',
+  8401: 'styles/resolve/graspoftheneedle/graspoftheneedle',
+  8402: 'styles/resolve/aftershock/aftershock',
+  8403: 'styles/resolve/guardian/guardian',
+  8404: 'styles/resolve/kleptomancy/kleptomancy'
 };
 
 export const getRunePath = (perkId: number): string =>
