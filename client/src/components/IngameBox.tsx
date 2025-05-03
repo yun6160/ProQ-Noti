@@ -5,7 +5,7 @@ import LiveIcon from '@/app/assets/icons/live.svg';
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
-import type { IIngameBoxProps } from '@/types';
+import type { IIngameBoxProps, LiveGameData, LiveGameParticipant } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { useUserId } from '@/utils/hooks/userAuth';
 import { POST } from '@/app/api/subscribe/route';
@@ -30,7 +30,7 @@ export default function IngameBox({
     initialIsSubscribe ?? false
   );
   const [hasFetched, setHasFetched] = useState(false);
-  const [liveGame, setLiveGame] = useState<any>(null);
+  const [liveGame, setLiveGame] = useState<LiveGameData | null>(null);
   const { toast } = useToast();
   const userId = useUserId();
 
@@ -54,7 +54,7 @@ export default function IngameBox({
     }
   }, [isOpen]);
 
-  const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
+  const player = liveGame?.participants.find((p: LiveGameParticipant) => p.puuid === puuid);
   const championId = player ? player.championId : null;
   const spellIds = player
   ? ([player.spell1Id, player.spell2Id])
