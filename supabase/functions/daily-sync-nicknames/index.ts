@@ -9,12 +9,11 @@ function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-Deno.serve(async () => {
+Deno.serve(async (req) => {
     const { data: players, error } = await supabase
         .from(TABLES.RIOT_ACCOUNTS)
         .select("*")
-        .order("last_checked_at", { ascending: true })
-        .limit(25)
+        .order("updated_at", { ascending: true })
         .returns<Player[]>();
 
     if (error || !players) {
@@ -22,17 +21,15 @@ Deno.serve(async () => {
         return new Response("Failed to fetch players", { status: 500 });
     }
 
-    let successCount = 0;
-    let failCount = 0;
-
     for (const player of players) {
-        const { id, summoner_name, puuid } = player;
-        const url = `https://kr.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${puuid}?api_key=${RIOT_API_KEY}`;
+        const { id, summoner_name, tag_line, puuid } = player;
+        const url = `https://asia.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}?api_key=${RIOT_API_KEY}`;
 
-        await delay(150);
+        await delay(500);
 
         try {
             const res = await fetch(url);
+
             if (!res.ok) {
                 if (res.status === 403) {
                     console.error("❌ Riot API 키가 잘못되었습니다.");
@@ -48,40 +45,41 @@ Deno.serve(async () => {
                         headers: { "Content-Type": "application/json" },
                     });
                 }
+                if (res.status === 429) {
+                    console.error("❌ Riot API 호출 제한 초과 (429). 잠시 후 다시 시도하세요.");
+                    return new Response(JSON.stringify({ error: "Riot API rate limit exceeded (429)" }), {
+                        status: 429,
+                        headers: { "Content-Type": "application/json" },
+                    });
+                }
             }
 
-            const is_online = res.status === 200;
-            const last_online = is_online ? new Date().toISOString() : player.last_online;
+            const json = await res.json();
+            const { gameName, tagLine } = json;
 
-            const { error: updateError } = await supabase
-                .from(TABLES.RIOT_ACCOUNTS)
-                .update({
-                    is_online,
-                    last_online,
-                    last_checked_at: new Date().toISOString(),
-                })
-                .eq("id", id);
+            if (gameName !== summoner_name || tagLine !== tag_line) {
+                const { error: updateError } = await supabase
+                    .from(TABLES.RIOT_ACCOUNTS)
+                    .update({
+                        summoner_name: gameName,
+                        tag_line: tagLine,
+                        updated_at: new Date().toISOString(),
+                    })
+                    .eq("id", id);
 
-            if (updateError) {
-                failCount++;
-                console.error(`❌ [${summoner_name}, ${id}] DB 업데이트 실패:`, updateError);
-            } else {
-                successCount++;
+                if (updateError) {
+                    console.error(`❌ [${summoner_name}, ${id}] DB 업데이트 실패:`, updateError);
+                }
+                console.log(`✅ [${summoner_name}#${tag_line}] 닉네임 업데이트: ${gameName}#${tagLine}`);
             }
         } catch (e) {
-            failCount++;
-            console.error(`🔥 [${summor_name}, ${id}] Riot API 호출 실패:`, e);
+            console.error(`🔥 [${summoner_name}] Riot API 호출 실패:`, e);
         }
     }
 
-    console.log(`✅ 성공: ${successCount}건`);
-    console.log(`❌ 실패: ${failCount}건`);
-
     return new Response(
         JSON.stringify({
-            message: "Player statuses updated (25 players)",
-            success: successCount,
-            failed: failCount,
+            message: "Player nickname updated successfully",
             total: players.length,
         }),
         { headers: { "Content-Type": "application/json" } }
