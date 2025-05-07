@@ -6,13 +6,13 @@ import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
 import type { IIngameBoxProps, LiveGameData, LiveGameParticipant } from '@/types';
-import { useToast } from '@/hooks/use-toast';
-import { useUserId } from '@/utils/hooks/userAuth';
+import { useToast } from '@/hooks/useToast';
+import { useUserId } from '@/hooks/userAuth';
 import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImage';
-import { gameModeMap } from '@/utils/hooks/lol';
+import { gameModeMap } from '@/hooks/lol';
 
 export default function IngameBox({
   pro_name,

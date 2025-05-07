@@ -1,6 +1,6 @@
 'use client'
 
-import { getRunePath } from "@/utils/hooks/lol";
+import { getRunePath } from "@/hooks/lol";
 
 interface RuneImagesProps {
   runePaths: number[];
