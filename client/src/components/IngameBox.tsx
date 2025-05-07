@@ -60,9 +60,9 @@ export default function IngameBox({
   ? ([player.spell1Id, player.spell2Id])
   : [];
 
-  const runePaths = player?.perks?.perkIds
-    ? player.perks.perkIds.slice(0, 2)
-    : [];
+  const runePaths = player?.perks
+  ? [player.perks.perkStyle, player.perks.perkSubStyle]
+  : [];
     
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();

@@ -5,6 +5,8 @@ export interface LiveGameParticipant {
   spell1Id: number;
   spell2Id: number;
   perks: {
+    perkStyle: number;
+    perkSubStyle: number;
     perkIds: number[];
   };
 }
