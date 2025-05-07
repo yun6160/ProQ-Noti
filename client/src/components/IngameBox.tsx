@@ -117,8 +117,7 @@ export default function IngameBox({
               )}
             </div>
             <div>
-              큐 타입:
-              {gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}
+              {`큐 타입: ${gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}`}
             </div>
           </div>
         </div>
