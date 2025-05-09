@@ -1,33 +1,15 @@
 const spellIdToFileName: Record<number, string> = {
+  1: 'summoner_boost',
+  3: 'summoner_exhaust',
   4: 'summoner_flash',
   6: 'summoner_haste',
   7: 'summoner_heal',
   11: 'summoner_smite',
   12: 'summoner_teleport_new',
-  21: 'summonerbarrier',
-  14: 'summonerignite',
   13: 'summonermana',
-  1: 'summoner_boost',
-  3: 'summoner_exhaust',
-  32: 'summoner_mark',
-  39: 'summoner_cleanse',
-  54: 'summoner_teleport',
-  55: 'summoner_snowball',
-  31: 'summoner_poro',
-  28: 'summoner_flashfrost',
-  30: 'summoner_snowball',
-  36: 'summoner_prison',
-  38: 'summoner_teleport',
-  59: 'summoner_snowball',
-  60: 'summoner_snowball',
-  61: 'summoner_snowball',
-  62: 'summoner_snowball',
-  63: 'summoner_snowball',
-  64: 'summoner_snowball',
-  65: 'summoner_snowball',
-  66: 'summoner_snowball',
-  67: 'summoner_snowball'
-}
+  14: 'summonerignite',
+  21: 'summonerbarrier'
+};
 
 export const getSpellName = (id: number): string | undefined => spellIdToFileName[id];
 
