@@ -28,6 +28,41 @@ export type Database = {
     };
     public: {
         Tables: {
+            fcm_tokens: {
+                Row: {
+                    created_at: string;
+                    device_type: string;
+                    fcm_token: string;
+                    id: string;
+                    updated_at: string | null;
+                    user_id: string;
+                };
+                Insert: {
+                    created_at?: string;
+                    device_type: string;
+                    fcm_token: string;
+                    id?: string;
+                    updated_at?: string | null;
+                    user_id: string;
+                };
+                Update: {
+                    created_at?: string;
+                    device_type?: string;
+                    fcm_token?: string;
+                    id?: string;
+                    updated_at?: string | null;
+                    user_id?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: "fcm_tokens_user_id_fkey";
+                        columns: ["user_id"];
+                        isOneToOne: false;
+                        referencedRelation: "users";
+                        referencedColumns: ["id"];
+                    }
+                ];
+            };
             notifications: {
                 Row: {
                     body: string;
@@ -204,7 +239,6 @@ export type Database = {
                     avatar_url: string | null;
                     created_at: string | null;
                     email: string;
-                    fcm_token: string | null;
                     id: string;
                     user_name: string | null;
                 };
@@ -212,7 +246,6 @@ export type Database = {
                     avatar_url?: string | null;
                     created_at?: string | null;
                     email: string;
-                    fcm_token?: string | null;
                     id: string;
                     user_name?: string | null;
                 };
@@ -220,7 +253,6 @@ export type Database = {
                     avatar_url?: string | null;
                     created_at?: string | null;
                     email?: string;
-                    fcm_token?: string | null;
                     id?: string;
                     user_name?: string | null;
                 };
