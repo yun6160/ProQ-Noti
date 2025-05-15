@@ -14,7 +14,8 @@ export default function SpellImages({ spellIds }: SpellImagesProps) {
         return (
           <img
             key={`${spell}-${i}`}
-            className="object-contain h-1/2"
+            // className="object-contain h-1/2"
+            className="w-6 h-6"
             src={`https://raw.communitydragon.org/latest/game/data/spells/icons2d/${fileName}.png`}
             alt={`spell-${spell}`}
           />

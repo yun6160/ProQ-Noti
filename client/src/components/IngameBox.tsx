@@ -11,7 +11,7 @@ import { useUserId } from '@/hooks/userAuth';
 import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
-import RuneImages from './RuneImage';
+import RuneImages from './RuneImages';
 import { gameModeMap } from '@/hooks/lol';
 
 export default function IngameBox({

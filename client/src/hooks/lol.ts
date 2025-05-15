@@ -13,29 +13,32 @@ const spellIdToFileName: Record<number, string> = {
 
 export const getSpellName = (id: number): string | undefined => spellIdToFileName[id];
 
-// Only including Precision and Inspiration trees and their common runes (used in ranked games)
 const perkIdToPath: Record<number, string> = {
-  8000: 'styles/precision/precision',
+  8000: 'styles/7201_Precision',
   8005: 'styles/precision/presstheattack/presstheattack',
   8008: 'styles/precision/lethaltempo/lethaltempotemp',
-  8021: 'styles/precision/fleetfootwork/fleetfootwork',
   8010: 'styles/precision/conqueror/conqueror',
-  9111: 'styles/precision/overheal/overheal',
-  9101: 'styles/precision/triumph/triumph',
-  9103: 'styles/precision/legendbloodline/legendbloodline',
-  9104: 'styles/precision/legendalacrity/legendalacrity',
-  8014: 'styles/precision/coupdegrace/coupdegrace',
-  8017: 'styles/inspiration/magicalfootwear/magicalfootwear', // This rune is from Inspiration but often used in Precision+Inspiration combo
-  8345: 'styles/inspiration/biscuitdelivery/biscuitdelivery',
-  8347: 'styles/inspiration/cosmicinsight/cosmicinsight',
+  8021: 'styles/precision/fleetfootwork/fleetfootwork',
 
-  8300: 'styles/inspiration/inspiration',
+  8100: 'styles/7200_Domination',
+  8112: 'styles/domination/electrocute/electrocute',
+  8124: 'styles/domination/predator/predator',
+  8128: 'styles/domination/darkharvest/darkharvest',
+
+  8200: 'styles/7202_Sorcery',
+  8214: 'styles/sorcery/summonaery/summonaery',
+  8229: 'styles/sorcery/arcanecomet/arcanecomet',
+  8230: 'styles/sorcery/phaserush/phaserush',
+
+  8300: 'styles/7203_Whimsy',
   8302: 'styles/inspiration/unsealedspellbook/unsealedspellbook',
   8303: 'styles/inspiration/firststrike/firststrike',
-  8313: 'styles/inspiration/hextechflashtraption/hextechflashtraption',
-  8316: 'styles/inspiration/miniondematerializer/miniondematerializer',
-  8321: 'styles/inspiration/futuresmarket/futuresmarket',
-  8326: 'styles/inspiration/timewarptonic/timewarptonic',
+  8301: 'styles/inspiration/glacialaugment/glacialaugment',
+
+  8400: 'styles/7204_Resolve',
+  8401: 'styles/resolve/veteranaftershock/veteranaftershock',
+  8437: 'styles/resolve/graspoftheundying/graspoftheundying',
+  8465: 'styles/resolve/guardian/guardian'
 };
 
 export const getRunePath = (perkId: number): string =>
