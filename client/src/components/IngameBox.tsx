@@ -96,7 +96,7 @@ export default function IngameBox({
           )}
         </button>
       </div>
-      {isOpen && player && (
+      {(isOpen && player) && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
           <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
             <ChampionImage championId={championId} />
@@ -120,6 +120,11 @@ export default function IngameBox({
               {`큐 타입: ${gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}`}
             </div>
           </div>
+        </div>
+      )}
+      {(isOpen && !player) && (
+        <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
+          <span className="text-xl">현재 게임중이 아닙니다.</span>
         </div>
       )}
     </div>
