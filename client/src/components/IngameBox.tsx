@@ -5,14 +5,14 @@ import LiveIcon from '@/app/assets/icons/live.svg';
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
-import type { IIngameBoxProps } from '@/types';
-import { useToast } from '@/hooks/use-toast';
-import { useUserId } from '@/utils/hooks/userAuth';
+import type { IIngameBoxProps, LiveGameData, LiveGameParticipant } from '@/types';
+import { useToast } from '@/hooks/useToast';
+import { useUserId } from '@/hooks/userAuth';
 import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
-import RuneImages from './RuneImage';
-import { gameModeMap } from '@/utils/hooks/lol';
+import RuneImages from './RuneImages';
+import { gameModeMap } from '@/hooks/lol';
 
 export default function IngameBox({
   pro_name,
@@ -30,7 +30,7 @@ export default function IngameBox({
     initialIsSubscribe ?? false
   );
   const [hasFetched, setHasFetched] = useState(false);
-  const [liveGame, setLiveGame] = useState<any>(null);
+  const [liveGame, setLiveGame] = useState<LiveGameData | null>(null);
   const { toast } = useToast();
   const userId = useUserId();
 
@@ -54,15 +54,15 @@ export default function IngameBox({
     }
   }, [isOpen]);
 
-  const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
+  const player = liveGame?.participants.find((p: LiveGameParticipant) => p.puuid === puuid);
   const championId = player ? player.championId : null;
   const spellIds = player
   ? ([player.spell1Id, player.spell2Id])
   : [];
 
-  const runePaths = player?.perks?.perkIds
-    ? player.perks.perkIds.slice(0, 2)
-    : [];
+  const runePaths = player?.perks
+  ? [player.perks.perkStyle, player.perks.perkSubStyle]
+  : [];
     
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -96,7 +96,7 @@ export default function IngameBox({
           )}
         </button>
       </div>
-      {isOpen && player && (
+      {(isOpen && player) && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
           <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
             <ChampionImage championId={championId} />
@@ -117,10 +117,14 @@ export default function IngameBox({
               )}
             </div>
             <div>
-              큐 타입:
-              {gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}
+              {`큐 타입: ${gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}`}
             </div>
           </div>
+        </div>
+      )}
+      {(isOpen && !player) && (
+        <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
+          <span className="text-xl">현재 게임중이 아닙니다.</span>
         </div>
       )}
     </div>

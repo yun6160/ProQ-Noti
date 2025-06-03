@@ -1,9 +1,10 @@
 'use client'
 
+import { LiveGameData } from '@/types'
 import { useEffect, useState } from 'react'
 
 export function useLiveGameBySummonerId(summonerId: string) {
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<LiveGameData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

@@ -4,7 +4,7 @@ import { supabase } from '@/utils/supabase/client';
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { storeLogin, storeLogout } from './authSlice';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 
 export default function AuthProvider() {
   const dispatch = useDispatch();
