@@ -1,7 +1,7 @@
 'use client'
 
 interface ChampionImageProps {
-  championId: number | undefined;
+  championId: number | null;
 }
 
 export default function ChampionImage({ championId }: ChampionImageProps) {
