@@ -7,12 +7,14 @@ import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
 import type { IIngameBoxProps } from '@/types';
 import { useToast } from '@/hooks/use-toast';
-import { useUserId } from '@/utils/hooks/userAuth';
+import { useUserId } from '@/hooks/useAuth';
 import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImage';
 import { gameModeMap } from '@/utils/hooks/lol';
+import { getToken } from 'firebase/messaging';
+import { messaging } from '@/lib/firebase';
 
 export default function IngameBox({
   pro_name,
@@ -36,7 +38,7 @@ export default function IngameBox({
 
   useEffect(() => {
     if (!puuid || !isOpen || hasFetched) return;
-    fetch(`/api/live-game?summonerId=${puuid}`, { cache: "no-store" })
+    fetch(`/api/live-game?summonerId=${puuid}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((json) => {
         if (json.inGame) {
@@ -56,18 +58,33 @@ export default function IngameBox({
 
   const player = liveGame?.participants.find((p: any) => p.puuid === puuid);
   const championId = player ? player.championId : null;
-  const spellIds = player
-  ? ([player.spell1Id, player.spell2Id])
-  : [];
+  const spellIds = player ? [player.spell1Id, player.spell2Id] : [];
 
   const runePaths = player?.perks?.perkIds
     ? player.perks.perkIds.slice(0, 2)
     : [];
-    
+
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+
     if (loggedIn) {
-      const result = await POST(userId!, Number(id));
+      const permission = Notification.permission;
+      if ('Notification' in window && permission !== 'granted') {
+        Notification.requestPermission();
+      }
+
+      if (permission === 'denied') {
+        toast({
+          description: '알림 권한을 허용해주세요!'
+        });
+        return;
+      }
+
+      const token = await getToken(messaging, {
+        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
+      });
+
+      const result = await POST(userId!, token, Number(id));
       setIsSubscribe(!isSubscribe);
     } else {
       toast({ description: '로그인 후 구독 버튼을 눌러주세요!' });
@@ -112,13 +129,20 @@ export default function IngameBox({
               <FaHourglassStart className="text-primary-mint" />
               {liveGame && (
                 <div>
-                  {Math.floor((Date.now() / 1000 - liveGame.gameStartTime) / 60)}분 전 시작
+                  {Math.floor(
+                    (Date.now() / 1000 - liveGame.gameStartTime) / 60
+                  )}
+                  분 전 시작
                 </div>
               )}
             </div>
             <div>
               큐 타입:
-              {gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}
+              {
+                gameModeMap[
+                  (liveGame?.gameMode as keyof typeof gameModeMap) || ''
+                ]
+              }
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
 import { gamerInfo } from '@/types';
-import { useIsLoggedIn } from '@/utils/hooks/userAuth';
+import { useIsLoggedIn } from '@/hooks/useAuth';
 
 export default function SubscribeList({ list }: { list: gamerInfo[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const withPWA = require('next-pwa')({
   dest: 'public',
+  skipWaiting: true,
   exclude: [
     // add buildExcludes here
     ({ asset, compilation }) => {

@@ -11,14 +11,6 @@ declare global {
 
 export default function Pwa() {
   useEffect(() => {
-    if (navigator.serviceWorker) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        registrations.forEach((registration) => {
-          registration.unregister();
-        });
-      });
-    }
-
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       navigator.serviceWorker
         .register('/sw.js')
@@ -28,6 +20,12 @@ export default function Pwa() {
         .catch((error) => {
           console.error('Service Worker registration failed:', error);
         });
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
     }
   }, []);
 
