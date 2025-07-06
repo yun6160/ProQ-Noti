@@ -1,23 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
+import { TABLES } from '@/constant/db';
+import { supabase } from '@/utils/supabase/client';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
-export async function POST(req: Request) {
-  const { email, puuid } = await req.json();
-
-  if (!email || !puuid) {
-    return NextResponse.json({ error: "Missing email or puuid" }, { status: 400 });
-  }
-
-  const { data, error } = await supabase.from("riot_users").insert([{ email, puuid }]);
+/**
+ * @description Save fcm token and device type to the database
+ * @param userId
+ * @param token
+ * @param deviceType
+ * @returns { status: 'success' | 'error', message?: string }
+ */
+export const POST = async (
+  userId: string,
+  token: string,
+  deviceType: string
+) => {
+  const { data, error } = await supabase
+    .from(TABLES.FCM_TOKENS)
+    .insert({ user_id: userId, fcm_token: token, device_type: deviceType });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return { status: 'error', message: error?.message || 'FCM 토큰 저장 실패' };
   }
-
-  return NextResponse.json({ message: "User registered successfully", data });
+  return { status: 'success', message: 'FCM 토큰 저장 성공' };
 };

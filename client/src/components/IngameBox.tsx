@@ -5,7 +5,13 @@ import LiveIcon from '@/app/assets/icons/live.svg';
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
-import type { IIngameBoxProps, LiveGameData, LiveGameParticipant } from '@/types';
+import { getToken } from 'firebase/messaging';
+import { messaging } from '@/lib/firebase';
+import type {
+  IIngameBoxProps,
+  LiveGameData,
+  LiveGameParticipant
+} from '@/types';
 import { useToast } from '@/hooks/useToast';
 import { useUserId } from '@/hooks/userAuth';
 import { POST } from '@/app/api/subscribe/route';
@@ -36,7 +42,7 @@ export default function IngameBox({
 
   useEffect(() => {
     if (!puuid || !isOpen || hasFetched) return;
-    fetch(`/api/live-game?summonerId=${puuid}`, { cache: "no-store" })
+    fetch(`/api/live-game?summonerId=${puuid}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((json) => {
         if (json.inGame) {
@@ -54,20 +60,37 @@ export default function IngameBox({
     }
   }, [isOpen]);
 
-  const player = liveGame?.participants.find((p: LiveGameParticipant) => p.puuid === puuid);
+  const player = liveGame?.participants.find(
+    (p: LiveGameParticipant) => p.puuid === puuid
+  );
   const championId = player ? player.championId : null;
-  const spellIds = player
-  ? ([player.spell1Id, player.spell2Id])
-  : [];
+  const spellIds = player ? [player.spell1Id, player.spell2Id] : [];
 
   const runePaths = player?.perks
-  ? [player.perks.perkStyle, player.perks.perkSubStyle]
-  : [];
-    
+    ? [player.perks.perkStyle, player.perks.perkSubStyle]
+    : [];
+
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+
     if (loggedIn) {
-      const result = await POST(userId!, Number(id));
+      const permission = Notification.permission;
+      if ('Notification' in window && permission !== 'granted') {
+        Notification.requestPermission();
+      }
+
+      if (permission === 'denied') {
+        toast({
+          description: '알림 권한을 허용해주세요!'
+        });
+        return;
+      }
+
+      const token = await getToken(messaging, {
+        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
+      });
+
+      const result = await POST(userId!, token, Number(id));
       setIsSubscribe(!isSubscribe);
     } else {
       toast({ description: '로그인 후 구독 버튼을 눌러주세요!' });
@@ -96,7 +119,7 @@ export default function IngameBox({
           )}
         </button>
       </div>
-      {(isOpen && player) && (
+      {isOpen && player && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
           <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
             <ChampionImage championId={championId} />
@@ -112,17 +135,20 @@ export default function IngameBox({
               <FaHourglassStart className="text-primary-mint" />
               {liveGame && (
                 <div>
-                  {Math.floor((Date.now() / 1000 - liveGame.gameStartTime) / 60)}분 전 시작
+                  {Math.floor(
+                    (Date.now() / 1000 - liveGame.gameStartTime) / 60
+                  )}
+                  분 전 시작
                 </div>
               )}
             </div>
             <div>
-              {`큐 타입: ${gameModeMap[liveGame?.gameMode as keyof typeof gameModeMap || ""]}`}
+              {`큐 타입: ${gameModeMap[(liveGame?.gameMode as keyof typeof gameModeMap) || '']}`}
             </div>
           </div>
         </div>
       )}
-      {(isOpen && !player) && (
+      {isOpen && !player && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
           <span className="text-xl">현재 게임중이 아닙니다.</span>
         </div>

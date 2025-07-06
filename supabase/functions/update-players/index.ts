@@ -41,10 +41,10 @@ Deno.serve(async () => {
                         headers: { "Content-Type": "application/json" },
                     });
                 }
-                if (res.status === 400) {
+                if (res.status === 401) {
                     console.error("❌ Riot API 키가 만료되었습니다.");
                     return new Response(JSON.stringify({ error: "Riot API key expired or unauthorized (401)" }), {
-                        status: 400,
+                        status: 401,
                         headers: { "Content-Type": "application/json" },
                     });
                 }
