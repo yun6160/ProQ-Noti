@@ -7,7 +7,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { usePlayerList } from '@/hooks/usePlayer';
 import SubscribeListSkeleton from '@/components/SubscribeSkeleton';
 import { getToken } from 'firebase/messaging';
-import { messaging } from '@/lib/firebase';
+import { getFirebaseMessaging } from '@/lib/firebase';
 import { getDeviceType } from '@/utils/device';
 import { useIsLoggedIn, useUserId } from '@/hooks/useAuth';
 import { POST } from '@/app/api/register/route';
@@ -21,6 +21,7 @@ export default function SubscribePage() {
   const [minLoading, setMinLoading] = useState(true);
   const isLoggedIn = useIsLoggedIn();
   const userId = useUserId();
+  const messaging = getFirebaseMessaging();
 
   useEffect(() => {
     setTeamName(team || '');
@@ -33,7 +34,7 @@ export default function SubscribePage() {
     if (isLoggedIn) {
       if ('Notification' in window && permission === 'default') {
         Notification.requestPermission().then((result) => {
-          if (result === 'granted') {
+          if (result === 'granted' && messaging) {
             getToken(messaging, {
               vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
             }).then((currentToken) => {
@@ -44,6 +45,7 @@ export default function SubscribePage() {
                   const result = POST(userId, currentToken, deviceType)
                     .then((res) => {
                       if (res.status === 'success') {
+                        console.log(currentToken);
                       } else {
                         console.warn('FCM 토큰 저장 실패:', res.message);
                       }

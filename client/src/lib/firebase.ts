@@ -1,12 +1,11 @@
-'use client';
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getMessaging } from 'firebase/messaging';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// src/lib/firebase.ts
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+'use client';
+
+import { initializeApp, getApp, getApps, FirebaseApp } from 'firebase/app';
+import { getAnalytics, Analytics } from 'firebase/analytics';
+import { getMessaging, Messaging } from 'firebase/messaging';
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -17,6 +16,33 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const messaging = getMessaging(app);
+// Firebase 앱 초기화는 서버/클라이언트 양쪽에서 안전
+const app: FirebaseApp = !getApps().length
+  ? initializeApp(firebaseConfig)
+  : getApp();
+
+let analytics: Analytics | null = null;
+let messaging: Messaging | null = null;
+
+// 브라우저 환경에서만 각 서비스를 초기화하는 함수들을 export
+export const getFirebaseAnalytics = (): Analytics | null => {
+  if (typeof window !== 'undefined') {
+    if (!analytics) {
+      analytics = getAnalytics(app);
+    }
+    return analytics;
+  }
+  return null;
+};
+
+export const getFirebaseMessaging = (): Messaging | null => {
+  if (typeof window !== 'undefined') {
+    if (!messaging) {
+      messaging = getMessaging(app);
+    }
+    return messaging;
+  }
+  return null;
+};
+
+export { app };

@@ -6,7 +6,7 @@ import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
 import { getToken } from 'firebase/messaging';
-import { messaging } from '@/lib/firebase';
+import { getFirebaseMessaging } from '@/lib/firebase';
 import type {
   IIngameBoxProps,
   LiveGameData,
@@ -39,6 +39,7 @@ export default function IngameBox({
   const [liveGame, setLiveGame] = useState<LiveGameData | null>(null);
   const { toast } = useToast();
   const userId = useUserId();
+  const messaging = getFirebaseMessaging();
 
   useEffect(() => {
     if (!puuid || !isOpen || hasFetched) return;
@@ -86,11 +87,13 @@ export default function IngameBox({
         return;
       }
 
-      const token = await getToken(messaging, {
-        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
-      });
+      if (messaging) {
+        const token = await getToken(messaging, {
+          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
+        });
+        const result = await POST(userId!, token, Number(id));
+      }
 
-      const result = await POST(userId!, token, Number(id));
       setIsSubscribe(!isSubscribe);
     } else {
       toast({ description: '로그인 후 구독 버튼을 눌러주세요!' });
