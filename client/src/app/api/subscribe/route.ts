@@ -40,10 +40,11 @@ export const GET_TEAM_ID = async (teamAbbr: string) => {
 /**
  * @description Subscribe or Unsubscribe
  * @param userId
+ * @param token
  * @param pro_id
  * @returns { status: 'subscribed' | 'unsubscribed' }
  */
-export const POST = async (userId: string, pro_id: number) => {
+export const POST = async (userId: string, token: string, pro_id: number) => {
   const { data, error } = await supabase
     .from(TABLES.SUBSCRIBE)
     .select('id')

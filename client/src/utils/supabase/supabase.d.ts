@@ -34,6 +34,70 @@ export type Database = {
   };
   public: {
     Tables: {
+      fcm_tokens: {
+        Row: {
+          created_at: string;
+          device_type: string;
+          fcm_token: string;
+          id: string;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          device_type: string;
+          fcm_token: string;
+          id?: string;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          device_type?: string;
+          fcm_token?: string;
+          id?: string;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'fcm_tokens_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
+      notifications: {
+        Row: {
+          body: string;
+          created_at: string;
+          id: string;
+          user_id: string;
+        };
+        Insert: {
+          body: string;
+          created_at?: string;
+          id?: string;
+          user_id: string;
+        };
+        Update: {
+          body?: string;
+          created_at?: string;
+          id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'notifications_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
       riot_accounts: {
         Row: {
           created_at: string | null;
@@ -87,41 +151,23 @@ export type Database = {
       riot_pro_users: {
         Row: {
           id: number;
-          is_online: boolean;
           is_starter: boolean;
-          last_checked_at: string;
-          last_online: string | null;
           position_number: number;
           pro_name: string;
-          puuid: string;
-          summoner_name: string;
-          tag_line: string;
           team_id: number | null;
         };
         Insert: {
           id?: number;
-          is_online?: boolean;
           is_starter?: boolean;
-          last_checked_at?: string;
-          last_online?: string | null;
           position_number?: number;
           pro_name: string;
-          puuid: string;
-          summoner_name: string;
-          tag_line: string;
           team_id?: number | null;
         };
         Update: {
           id?: number;
-          is_online?: boolean;
           is_starter?: boolean;
-          last_checked_at?: string;
-          last_online?: string | null;
           position_number?: number;
           pro_name?: string;
-          puuid?: string;
-          summoner_name?: string;
-          tag_line?: string;
           team_id?: number | null;
         };
         Relationships: [

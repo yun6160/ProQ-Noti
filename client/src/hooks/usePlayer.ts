@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/useToast';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { TABLES } from '@/constant/db';
-import { useUserId } from '@/hooks/userAuth';
+import { useUserId } from '@/hooks/useAuth';
 
 export function usePlayerList(team: string) {
   const { toast } = useToast();
