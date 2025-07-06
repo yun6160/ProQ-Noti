@@ -1,4 +1,4 @@
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import { isLoggedIn as selectIsLoggedIn, storeLogout } from '@/store/authSlice';
 import { useIsLoggedIn } from '@/hooks/useAuth';

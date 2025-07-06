@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { GET, GET_TEAM_ID } from '@/app/api/subscribe/route';
 import { GET as GET_TEAM } from '@/app/api/team/route';
 import { gamerInfo, Team } from '@/types';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { TABLES } from '@/constant/db';
