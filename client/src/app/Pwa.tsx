@@ -13,7 +13,7 @@ export default function Pwa() {
   useEffect(() => {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       navigator.serviceWorker
-        .register('/sw.js')
+        .register('/firebase-messaging-sw.js')
         .then((registration) => {
           console.log('Service Worker registered:', registration);
         })
