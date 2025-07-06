@@ -1,115 +1,118 @@
-import { createClient } from 'npm:@supabase/supabase-js@2'
-import { JWT } from 'npm:google-auth-library@9'
-import serviceAccount from '../service-account.json' with { type: 'json' }
-import { supabase } from "../_shared/supabaseClient.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { JWT } from "npm:google-auth-library@9";
 import { TABLES } from "../_shared/constants.ts";
 
 interface Notification {
-  id: string
-  user_id: string
-  body: string
+    id: string;
+    user_id: string;
+    body: string;
 }
 
 interface WebhookPayload {
-  type: 'INSERT'
-  table: string
-  record: Notification
-  schema: 'public'
+    type: "INSERT";
+    table: string;
+    record: Notification;
+    schema: "public";
 }
+
+const getAccessToken = async (clientEmail: string, privateKey: string): Promise<string> => {
+    const jwtClient = new JWT({
+        email: clientEmail,
+        key: privateKey,
+        scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
+    });
+    const tokens = await jwtClient.getAccessToken();
+    if (!tokens.token) {
+        throw new Error("Failed to retrieve access token.");
+    }
+    return tokens.token;
+};
 
 Deno.serve(async (req) => {
-  try {
-    const payload: WebhookPayload = await req.json()
+    try {
+        // 1. 환경 변수 로드 및 검증
+        const clientEmail = Deno.env.get("SERVICE_ACCOUNT_CLIENT_EMAIL");
+        let privateKey = Deno.env.get("SERVICE_ACCOUNT_PRIVATE_KEY");
+        const projectId = Deno.env.get("FIREBASE_PROJECT_ID");
 
-    const { data: tokenList } = await supabase
-      .from(TABLES.FCM_TOKENS)
-      .select('fcm_token')
-      .eq('user_id', payload.record.user_id)
+        if (!clientEmail || !privateKey || !projectId) {
+            console.error("Missing critical environment variables.");
+            return new Response(JSON.stringify({ error: "Server configuration error" }), { status: 500 });
+        }
+        privateKey = privateKey.replace(/\\n/g, "\n");
 
-    if (!tokenList || tokenList.length === 0) {
-      return new Response(JSON.stringify({ message: 'No FCM tokens' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
+        // 2. 페이로드 파싱
+        const payload: WebhookPayload = await req.json();
 
-    const accessToken = await getAccessToken({
-      clientEmail: serviceAccount.client_email,
-      privateKey: serviceAccount.private_key,
-    })
+        // 3. 관리자용 Supabase 클라이언트 생성
+        const supabaseAdmin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-    const results = []
+        // 4. DB에서 FCM 토큰 조회
+        const { data: tokenList } = await supabaseAdmin
+            .from(TABLES.FCM_TOKENS)
+            .select("fcm_token")
+            .eq("user_id", payload.record.user_id);
 
-    for (const { fcm_token } of tokenList) {
-      try {
-        const res = await fetch(
-          `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-              message: {
-                token: fcm_token,
-                notification: {
-                  title: `ProQ-Noti`,
-                  body: payload.record.body,
+        if (!tokenList || tokenList.length === 0) {
+            return new Response(JSON.stringify({ message: "No FCM tokens found for user." }), {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
+
+        // 5. Google 인증 토큰 발급
+        const accessToken = await getAccessToken(clientEmail, privateKey);
+
+        // 6. Promise.all을 사용해 모든 알림을 동시에 병렬로 전송 (성능 개선)
+        const promises = tokenList.map(({ fcm_token }) => {
+            const fcmBody = {
+                message: {
+                    token: fcm_token,
+                    notification: {
+                        title: `ProQ-Noti`,
+                        body: payload.record.body,
+                    },
                 },
-              },
-            }),
-          }
-        )
-        const resData = await res.json()
-        results.push({
-          token: fcm_token,
-          status: res.status,
-          success: res.ok,
-          response: resData,
-        })
-      } catch (err) {
-        console.error(`FCM send failed for token: ${fcm_token}`, err)
-        results.push({
-          token: fcm_token,
-          status: 0,
-          success: false,
-          error: err.message || err,
-        })
-      }
+            };
+
+            return fetch(`https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify(fcmBody),
+            })
+                .then((res) =>
+                    res.json().then((resData) => ({
+                        token: fcm_token,
+                        status: res.status,
+                        success: res.ok,
+                        response: resData,
+                    }))
+                )
+                .catch((err) => {
+                    console.error(`FCM send failed for token: ${fcm_token}`, err);
+                    return {
+                        token: fcm_token,
+                        status: 0,
+                        success: false,
+                        error: err.message || err,
+                    };
+                });
+        });
+
+        const results = await Promise.all(promises);
+        console.log("FCM Send Results:", results);
+
+        // 7. 최종 결과 반환
+        return new Response(JSON.stringify({ success: true, results }), {
+            headers: { "Content-Type": "application/json" },
+        });
+    } catch (err) {
+        console.error("❌ Top-level server error:", err);
+        return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+            status: 500,
+        });
     }
-
-    return new Response(JSON.stringify({ success: true, results }), {
-      headers: { 'Content-Type': 'application/json' },
-    })
-  } catch (err) {
-    console.error('❌ 서버 에러:', err)
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-})
-
-const getAccessToken = ({
-  clientEmail,
-  privateKey,
-}: {
-  clientEmail: string
-  privateKey: string
-}): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const jwtClient = new JWT({
-      email: clientEmail,
-      key: privateKey,
-      scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
-    })
-    jwtClient.authorize((err, tokens) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      resolve(tokens!.access_token!)
-    })
-  })
-}
+});
