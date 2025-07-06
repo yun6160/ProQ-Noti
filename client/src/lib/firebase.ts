@@ -1,9 +1,6 @@
-// src/lib/firebase.ts
-
 'use client';
 
 import { initializeApp, getApp, getApps, FirebaseApp } from 'firebase/app';
-import { getAnalytics, Analytics } from 'firebase/analytics';
 import { getMessaging, Messaging } from 'firebase/messaging';
 
 const firebaseConfig = {
@@ -21,19 +18,7 @@ const app: FirebaseApp = !getApps().length
   ? initializeApp(firebaseConfig)
   : getApp();
 
-let analytics: Analytics | null = null;
 let messaging: Messaging | null = null;
-
-// 브라우저 환경에서만 각 서비스를 초기화하는 함수들을 export
-export const getFirebaseAnalytics = (): Analytics | null => {
-  if (typeof window !== 'undefined') {
-    if (!analytics) {
-      analytics = getAnalytics(app);
-    }
-    return analytics;
-  }
-  return null;
-};
 
 export const getFirebaseMessaging = (): Messaging | null => {
   if (typeof window !== 'undefined') {

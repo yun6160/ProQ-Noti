@@ -10,11 +10,10 @@ self.addEventListener('push', function (e) {
   const resultData = e.data.json().notification;
   const notificationTitle = resultData.title;
   const notificationOptions = {
-    body: resultData.body
+    body: resultData.body,
+    icon: '/icon-192x192.png',
+    badge: '/icon-192x192.png'
   };
-  console.log(resultData.title, {
-    body: resultData.body
-  });
   e.waitUntil(
     self.registration.showNotification(notificationTitle, notificationOptions)
   );
