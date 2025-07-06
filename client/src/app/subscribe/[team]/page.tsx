@@ -44,7 +44,6 @@ export default function SubscribePage() {
                   const result = POST(userId, currentToken, deviceType)
                     .then((res) => {
                       if (res.status === 'success') {
-                        console.log('✅ FCM 토큰 저장 성공');
                       } else {
                         console.warn('FCM 토큰 저장 실패:', res.message);
                       }
