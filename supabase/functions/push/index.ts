@@ -105,6 +105,25 @@ Deno.serve(async (req) => {
         const results = await Promise.all(promises);
         console.log("FCM Send Results:", results);
 
+        // 6. 발송에 실패한 토큰들만 걸러내기
+        const invalidTokens = results.filter((result) => !result.success).map((result) => result.token);
+
+        if (invalidTokens.length > 0) {
+            console.log(`Found ${invalidTokens.length} invalid tokens. Deleting from database...`);
+
+            // 7. 실패한 토큰들을 DB에서 한 번에 삭제
+            const { error: deleteError } = await supabaseAdmin
+                .from(TABLES.FCM_TOKENS)
+                .delete()
+                .in("fcm_token", invalidTokens);
+
+            if (deleteError) {
+                console.error("Error deleting invalid tokens:", deleteError);
+            } else {
+                console.log("Successfully deleted invalid tokens.");
+            }
+        }
+
         // 7. 최종 결과 반환
         return new Response(JSON.stringify({ success: true, results }), {
             headers: { "Content-Type": "application/json" },

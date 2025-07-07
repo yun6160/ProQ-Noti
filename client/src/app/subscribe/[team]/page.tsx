@@ -27,8 +27,6 @@ export default function SubscribePage() {
     setTeamName(team || '');
     const timer = setTimeout(() => setMinLoading(false), 200);
 
-    if (typeof window === 'undefined') return;
-
     const permission = Notification.permission;
 
     if (isLoggedIn) {
