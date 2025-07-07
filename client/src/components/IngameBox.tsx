@@ -13,7 +13,7 @@ import type {
   LiveGameParticipant
 } from '@/types';
 import { useToast } from '@/hooks/useToast';
-import { useUserId } from '@/hooks/userAuth';
+import { useUserId } from '@/hooks/useAuth';
 import { POST } from '@/app/api/subscribe/route';
 import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
