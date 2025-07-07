@@ -39,7 +39,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
 
   const reToken = () => {
     if (typeof window === 'undefined') {
-      toast({ description: '알림이 재설정됐습니다' });
+      toast({ description: '다른 화면을 들렀다가 시도해주세요' });
       return;
     }
 
@@ -107,7 +107,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
               </li>
             )}
             {isLoggedIn && (
-              <li className="text-center hover:bg-gray-100 cursor-pointer">
+              <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
                 <button
                   onClick={handleLogout}
                   className="block p-2 w-full text-black"

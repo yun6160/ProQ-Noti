@@ -37,9 +37,6 @@ export const POST = async (
 
     if (existingRecord) {
       // 2. 레코드가 이미 존재하면 업데이트
-      console.log(
-        `기존 FCM 토큰 업데이트: userId=${userId}, deviceType=${deviceType}`
-      );
       operationResult = await supabase
         .from(TABLES.FCM_TOKENS)
         .update({ fcm_token: token, updated_at: new Date().toISOString() }) // updated_at도 함께 업데이트
@@ -47,9 +44,6 @@ export const POST = async (
       return { status: 'success', message: 'FCM 토큰을 업데이트 했습니다' };
     } else {
       // 3. 레코드가 없으면 새로 인서트
-      console.log(
-        `새로운 FCM 토큰 삽입: userId=${userId}, deviceType=${deviceType}`
-      );
       operationResult = await supabase
         .from(TABLES.FCM_TOKENS)
         .insert({ user_id: userId, fcm_token: token, device_type: deviceType });
