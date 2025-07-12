@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
             const fcmBody = {
                 message: {
                     token: fcm_token,
-                    notification: {
+                    data: {
                         title: `ProQ-Noti`,
                         body: payload.record.body,
                     },
