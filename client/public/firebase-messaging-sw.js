@@ -52,19 +52,17 @@ messaging.onBackgroundMessage((payload) => {
     payload
   );
 
-  // 푸시 알림으로 표시할 데이터 추출
-  // payload 구조: { notification: { title, body, icon, ... }, data: { custom_key: 'value' } }
-  const notificationTitle = payload.notification?.title || '새 알림';
-  const notificationOptions = {
-    body: payload.notification?.body || '내용 없음',
-    icon: payload.notification?.icon || '/icon-192x192.png', // 기본 아이콘 경로
-    badge: payload.notification?.badge || '/icon-192x192.png', // 기본 배지 아이콘 경로 (iOS)
-    image: payload.notification?.image || undefined, // 알림 내 이미지 URL
-    data: payload.data // 알림 클릭 시 전달할 추가 데이터
-    // vibration: [200, 100, 200], // 진동 패턴 (선택 사항)
-    // tag: 'my-notification-tag', // 알림 그룹화 (선택 사항)
-  };
+  const messageData = payload.data || {}; // data payload가 비어있을 경우를 대비
 
+  // 푸시 알림으로 표시할 데이터 추출
+  const notificationTitle = messageData.title || '새 알림';
+  const notificationOptions = {
+    body: messageData.body || '내용 없음',
+    icon: messageData.icon || '/icon-192x192.png',
+    badge: messageData.badge || '/icon-192x192.png',
+    image: messageData.image || undefined,
+    data: messageData // data payload 전체를 notificationOptions.data에 넣어줌 (클릭 핸들러에서 사용)
+  };
   // 푸시 알림 표시
   // event.waitUntil()을 사용하여 알림 표시 작업이 완료될 때까지 서비스 워커가 종료되지 않도록 함
   self.registration.showNotification(notificationTitle, notificationOptions);
