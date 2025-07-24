@@ -99,7 +99,7 @@ export default function Page() {
     <Layout>
       <Layout.Header title="소속 팀 선택" handleBack={() => router.back()} />
       <Layout.Main>
-        <div className="flex justify-center items-center h-full">
+        <div className="w-full max-w-md mx-auto">
           <TeamGrid onSelectTeam={handleSelectTeam} teamList={teams} />
         </div>
       </Layout.Main>
