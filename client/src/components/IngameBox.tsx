@@ -36,6 +36,7 @@ export default function IngameBox({
     initialIsSubscribe ?? false
   );
   const [hasFetched, setHasFetched] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [liveGame, setLiveGame] = useState<LiveGameData | null>(null);
   const { toast } = useToast();
   const userId = useUserId();
@@ -43,6 +44,7 @@ export default function IngameBox({
 
   useEffect(() => {
     if (!puuid || !isOpen || hasFetched) return;
+    if (isOpen && puuid) setLoading(true);
     fetch(`/api/live-game?summonerId=${puuid}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((json) => {
@@ -51,12 +53,18 @@ export default function IngameBox({
         } else {
           setLiveGame(null);
         }
-        setHasFetched(true);
+      })
+      .catch((error) => {
+        setLiveGame(null);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [puuid, isOpen, hasFetched]);
 
   useEffect(() => {
     if (!isOpen) {
+      setLoading(false);
       setHasFetched(false);
     }
   }, [isOpen]);
@@ -122,38 +130,44 @@ export default function IngameBox({
           )}
         </button>
       </div>
-      {isOpen && player && (
+      {isOpen && (
         <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
-          <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
-            <ChampionImage championId={championId} />
-            <SpellImages spellIds={spellIds} />
-            <RuneImages runePaths={runePaths} />
-          </div>
-          <div className="text-body2Bold">
-            {summoner_name}
-            {tag_line && `#${tag_line}`}
-          </div>
-          <div className="flex justify-between w-full text-body2">
-            <div className="flex gap-1 items-center">
-              <FaHourglassStart className="text-primary-mint" />
-              {liveGame && (
-                <div>
-                  {Math.floor(
-                    (Date.now() / 1000 - liveGame.gameStartTime) / 60
+          {loading ? (
+            // 1. 로딩 중일 때는 스피너를 표시
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-mint"></div>
+          ) : player ? (
+            // 2. 로딩이 끝났고, player 데이터가 있으면 게임 정보를 표시
+            <>
+              <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
+                <ChampionImage championId={championId} />
+                <SpellImages spellIds={spellIds} />
+                <RuneImages runePaths={runePaths} />
+              </div>
+              <div className="text-body2Bold">
+                {summoner_name}
+                {tag_line && `#${tag_line}`}
+              </div>
+              <div className="flex justify-between w-full text-body2">
+                <div className="flex gap-1 items-center">
+                  <FaHourglassStart className="text-primary-mint" />
+                  {liveGame && (
+                    <div>
+                      {Math.floor(
+                        (Date.now() - liveGame.gameStartTime) / 60000
+                      )}
+                      분 전 시작
+                    </div>
                   )}
-                  분 전 시작
                 </div>
-              )}
-            </div>
-            <div>
-              {`큐 타입: ${gameModeMap[(liveGame?.gameMode as keyof typeof gameModeMap) || '']}`}
-            </div>
-          </div>
-        </div>
-      )}
-      {isOpen && !player && (
-        <div className="flex flex-col gap-1 items-center justify-center px-7 py-3 w-[20.69rem] web:w-[30rem] h-[9.25rem] rounded-[10px] shadow-bottom bg-primary-white animate-slideindown">
-          <span className="text-xl">현재 게임중이 아닙니다.</span>
+                <div>
+                  {`큐 타입: ${gameModeMap[(liveGame?.gameMode as keyof typeof gameModeMap) || '']}`}
+                </div>
+              </div>
+            </>
+          ) : (
+            // 3. 로딩이 끝났는데, player 데이터가 없으면 '게임 중 아님' 메시지를 표시
+            <span className="text-xl">현재 게임중이 아닙니다.</span>
+          )}
         </div>
       )}
     </div>
