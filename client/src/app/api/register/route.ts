@@ -2,10 +2,8 @@ import { TABLES } from '@/constant/db';
 import { supabase } from '@/utils/supabase/client';
 
 /**
- * @description Save or update FCM token and device type to the database.
- * If a record with the same user_id and device_type exists, update it with the new token,
- * even if the token value is the same (to handle potential "bad token" re-registration).
- * Otherwise, insert a new record.
+ * @description Save or update FCM token and device type using upsert.
+ * The operation is based on the unique constraint of (user_id, device_type).
  * @param userId
  * @param token
  * @param deviceType
@@ -17,59 +15,32 @@ export const POST = async (
   deviceType: string
 ) => {
   try {
-    const { data: existingRecord, error: selectError } = await supabase
-      .from(TABLES.FCM_TOKENS)
-      .select('id, fcm_token')
-      .eq('user_id', userId)
-      .eq('device_type', deviceType)
-      .maybeSingle();
+    const { error } = await supabase.from(TABLES.FCM_TOKENS).upsert(
+      {
+        // 1. 저장하거나 업데이트할 데이터
+        user_id: userId,
+        fcm_token: token,
+        device_type: deviceType,
+        updated_at: new Date().toISOString()
+      },
+      {
+        // 2. 어떤 기준으로 중복을 판단할지 지정
+        // 'user_id'와 'device_type'이 모두 같은 행이 있으면 업데이트, 없으면 삽입
+        onConflict: 'user_id,device_type'
+      }
+    );
 
-    if (selectError) {
-      console.error('FCM 토큰 조회 중 오류 발생:', selectError);
-      return {
-        status: 'error',
-        message: selectError?.message || 'FCM 토큰 조회 실패'
-      };
+    // upsert 과정에서 에러가 발생했다면
+    if (error) {
+      // 에러를 던져서 아래 catch 블록에서 처리하도록 함
+      throw error;
     }
 
-    let operationResult;
-    let successMessage: string;
-
-    if (existingRecord) {
-      // 2. 레코드가 이미 존재하면 무조건 업데이트 시도
-      // 기존 토큰과 새 토큰이 같더라도 업데이트를 시도하여
-      // 불량 토큰 재설정을 강제함. (updated_at 갱신 효과도 있음)
-      console.log(
-        `FCM 토큰 업데이트 시도: userId=${userId}, deviceType=${deviceType}`
-      );
-      operationResult = await supabase
-        .from(TABLES.FCM_TOKENS)
-        .update({ fcm_token: token, updated_at: new Date().toISOString() }) // updated_at도 함께 업데이트
-        .eq('id', existingRecord.id);
-      successMessage = 'FCM 토큰을 업데이트 했습니다.';
-    } else {
-      // 3. 레코드가 없으면 새로 인서트
-      console.log(
-        `새로운 FCM 토큰 삽입 시도: userId=${userId}, deviceType=${deviceType}`
-      );
-      operationResult = await supabase
-        .from(TABLES.FCM_TOKENS)
-        .insert({ user_id: userId, fcm_token: token, device_type: deviceType });
-      successMessage = 'FCM 토큰을 저장했습니다.';
-    }
-
-    if (operationResult.error) {
-      console.error('FCM 토큰 저장/업데이트 실패:', operationResult.error);
-      return {
-        status: 'error',
-        message: operationResult.error?.message || 'FCM 토큰 저장/업데이트 실패'
-      };
-    }
-
+    const successMessage = 'FCM 토큰이 성공적으로 저장/업데이트되었습니다.';
     console.log(successMessage);
     return { status: 'success', message: successMessage };
   } catch (err) {
-    console.error('❌ FCM 토큰 POST 함수 내부 오류:', err);
+    console.error('❌ FCM 토큰 upsert 중 오류 발생:', err);
     return {
       status: 'error',
       message: (err as Error).message || '알 수 없는 서버 오류'
