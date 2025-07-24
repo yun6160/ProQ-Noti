@@ -61,6 +61,7 @@ messaging.onBackgroundMessage((payload) => {
     icon: messageData.icon || '/icon-192x192.png',
     badge: messageData.badge || '/icon-192x192.png',
     image: messageData.image || undefined,
+    vibrate: [300],
     data: messageData // data payload 전체를 notificationOptions.data에 넣어줌 (클릭 핸들러에서 사용)
   };
   // 푸시 알림 표시
