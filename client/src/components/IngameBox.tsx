@@ -138,10 +138,8 @@ export default function IngameBox({
               <FaHourglassStart className="text-primary-mint" />
               {liveGame && (
                 <div>
-                  {Math.floor(
-                    (Date.now() / 1000 - liveGame.gameStartTime) / 60
-                  )}
-                  분 전 시작
+                  {Math.floor((Date.now() - liveGame.gameStartTime) / 60000)}분
+                  전 시작
                 </div>
               )}
             </div>
