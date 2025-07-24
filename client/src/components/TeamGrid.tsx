@@ -8,25 +8,14 @@ type TeamGridProps = {
 
 export function TeamGrid({ teamList, onSelectTeam }: TeamGridProps) {
   return (
-    <div className="flex flex-col items-center gap-5 web:gap-10 px-4">
-      {Array.from({ length: Math.ceil(teamList.length / 2) }).map(
-        (_, rowIndex) => (
-          <div
-            key={rowIndex}
-            className="flex gap-5 web:gap-10 max-w-[22rem] web:max-w-[30rem] screen:max-w-[40rem] justify-center"
-          >
-            {teamList
-              .slice(rowIndex * 2, rowIndex * 2 + 2)
-              .map((team, index) => (
-                <TeamCard
-                  key={index}
-                  team={team}
-                  onClick={() => onSelectTeam(team.name_abbr)}
-                />
-              ))}
-          </div>
-        )
-      )}
+    <div className="grid grid-cols-2 w-full h-full gap-4 place-items-center px-20 md:px-28 py-10">
+      {teamList.map((team) => (
+        <TeamCard
+          key={team.id} // key는 고유한 id를 사용하는 것이 더 좋아.
+          team={team}
+          onClick={() => onSelectTeam(team.name_abbr)}
+        />
+      ))}
     </div>
   );
 }
