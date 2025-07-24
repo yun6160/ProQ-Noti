@@ -53,7 +53,7 @@ const Header = ({ title, handleBack, option, children }: HeaderProps) => {
 // Main 컴포넌트
 const Main = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="relative flex flex-col flex-grow w-full min-h-0 px-5 py-3">
+    <main className="relative flex flex-col flex-grow w-full min-h-0 px-5 py-3 justify-center items-center">
       {children}
     </main>
   );
