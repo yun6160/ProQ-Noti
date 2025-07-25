@@ -59,7 +59,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: messageData.body || '내용 없음',
     icon: messageData.icon || '/icon-192x192.png',
-    badge: messageData.badge || '/icon-192x192.png',
+    badge: messageData.badge || '/android-192x192.png',
     image: messageData.image || undefined,
     vibrate: [300],
     data: messageData // data payload 전체를 notificationOptions.data에 넣어줌 (클릭 핸들러에서 사용)
