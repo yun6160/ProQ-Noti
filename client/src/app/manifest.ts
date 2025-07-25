@@ -19,6 +19,11 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/icon-512x512.png',
         sizes: '512x512',
         type: 'image/png'
+      },
+      {
+        src: '/android-192x192.png',
+        sizes: '192x192',
+        purpose: 'monochrome'
       }
     ]
   };
