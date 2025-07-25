@@ -65,8 +65,9 @@ messaging.onBackgroundMessage((payload) => {
     data: messageData // data payload 전체를 notificationOptions.data에 넣어줌 (클릭 핸들러에서 사용)
   };
   // 푸시 알림 표시
-  // event.waitUntil()을 사용하여 알림 표시 작업이 완료될 때까지 서비스 워커가 종료되지 않도록 함
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  event.waitUntil(
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  );
 });
 
 // 푸시 알림 클릭 이벤트 핸들러 (사용자가 알림을 클릭했을 때)
