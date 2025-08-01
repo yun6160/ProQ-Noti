@@ -37,7 +37,6 @@ export const POST = async (
     }
 
     const successMessage = 'FCM 토큰이 성공적으로 저장/업데이트되었습니다.';
-    console.log(successMessage);
     return { status: 'success', message: successMessage };
   } catch (err) {
     console.error('❌ FCM 토큰 upsert 중 오류 발생:', err);
