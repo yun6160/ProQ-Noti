@@ -140,8 +140,10 @@ export default function IngameBox({
             <>
               <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
                 <ChampionImage championId={championId} />
-                <SpellImages spellIds={spellIds} />
-                <RuneImages runePaths={runePaths} />
+                <div className="flex gap-1">
+                  <SpellImages spellIds={spellIds} />
+                  <RuneImages runePaths={runePaths} />
+                </div>
               </div>
               <div className="text-body2Bold">
                 {summoner_name}
