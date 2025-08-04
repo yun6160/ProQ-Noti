@@ -49,7 +49,11 @@ export default function IngameBox({
     if (!puuid || !isOpen || hasFetched) return;
 
     const now = Date.now();
-    if (now - lastFetchTime < FETCH_INTERVAL) return;
+    if (now - lastFetchTime < FETCH_INTERVAL) {
+      setHasFetched(true);
+      return;
+    }
+    setLastFetchTime(now);
     if (isOpen && puuid) setLoading(true);
     fetch(`/api/live-game?summonerId=${puuid}`, { cache: 'no-store' })
       .then((res) => res.json())
