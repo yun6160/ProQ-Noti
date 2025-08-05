@@ -23,6 +23,36 @@ export async function DELETE(request: NextRequest) {
       }
     );
 
+    try {
+      const { data: subscribeData, error: subscribeError } = await supabaseAdmin
+        .from('subscribe')
+        .delete()
+        .eq('user_id', user.id)
+        .select();
+
+      if (subscribeError) {
+        console.warn('구독 정보 삭제 실패:', subscribeError.message);
+      } else {  
+      }
+    } catch (subscribeDeleteError) {
+      console.warn('구독 테이블 접근 실패:', subscribeDeleteError);
+    }
+
+    try {
+      const { data: fcmData, error: fcmError } = await supabaseAdmin
+        .from('fcm_tokens')
+        .delete()
+        .eq('user_id', user.id)
+        .select();
+
+      if (fcmError) {
+        console.warn('FCM 토큰 삭제 실패:', fcmError.message);
+      } else {
+      }
+    } catch (fcmDeleteError) {
+      console.warn('FCM 토큰 테이블 접근 실패:', fcmDeleteError);
+    }
+
     const { data: deleteResult, error: deleteError } = await supabaseAdmin
       .from('users')
       .delete()
@@ -30,43 +60,43 @@ export async function DELETE(request: NextRequest) {
       .select();
 
     if (deleteError) {
+      console.error('사용자 데이터 삭제 실패:', deleteError);
       return NextResponse.json(
-        { error: `삭제 실패: ${deleteError.message}` },
+        { error: `사용자 데이터 삭제 실패: ${deleteError.message}` },
         { status: 500 }
       );
     }
 
-    const { error: subscriptionError } = await supabaseAdmin
-      .from('subscriptions')
-      .delete()
-      .eq('user_id', user.id);
-
-    if (subscriptionError) {
-      return NextResponse.json(
-        { error: `구독 정보 삭제 실패: ${subscriptionError.message}` },
-        { status: 500 }
-      );
-    }
 
     const { error: authDeleteError } = await supabaseAdmin.auth.admin.deleteUser(user.id);
 
     if (authDeleteError) {
-      return NextResponse.json(
-        { error: `Auth 삭제 실패: ${authDeleteError.message}` },
-        { status: 500 }
-      );
+      console.error('Auth 삭제 실패:', authDeleteError);
+      console.warn('사용자 데이터는 삭제되었지만 Auth 계정 삭제에 실패했습니다.');
+    } else {
     }
-
-    await supabase.auth.signOut();
+  
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (signOutError) {
+      console.warn('세션 종료 실패:', signOutError);
+    }
 
     return NextResponse.json({
       message: '회원탈퇴가 완료되었습니다.',
-      deletedData: deleteResult
+      deletedData: {
+        user: deleteResult,
+        subscriptions: '구독 정보 삭제 완료',
+        fcmTokens: 'FCM 토큰 삭제 완료'
+      },
+      warnings: authDeleteError ? ['Auth 계정 삭제 실패'] : [],
+      shouldLogout: true
     });
 
   } catch (error) {
+    console.error('회원탈퇴 처리 중 오류:', error);
     return NextResponse.json(
-      { error: `처리 중 오류: ${error instanceof Error ? error.message : '알 수 없는 오류'}` },
+      { error: `처리 중 오류가 발생했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}` },
       { status: 500 }
     );
   }
