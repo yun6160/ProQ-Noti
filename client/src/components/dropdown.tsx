@@ -50,11 +50,6 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
               </Link>
             </li>
             <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
-              <Link href="/mypage" className="block p-2 text-black no-underline">
-                마이페이지
-              </Link>
-            </li>
-            <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
               <a
                 href="https://certain-gruyere-8ee.notion.site/ProQ-Noti-22fa948cd15380cbabc8f16ffe0ab5d3"
                 target="_blank"
@@ -82,6 +77,13 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
                 >
                   로그아웃
                 </button>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
+                <Link href="/mypage" className="block p-2 text-black no-underline">
+                  마이페이지
+                </Link>
               </li>
             )}
             {isLoggedIn && (

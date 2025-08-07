@@ -9,7 +9,7 @@ import { supabase } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function MyPage() {
+export default function Mypage() {
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [subscribeList, setSubscribeList] = useState<IProPlayerData[]>([]);
@@ -117,77 +117,79 @@ export default function MyPage() {
     <Layout>
       <Layout.Header title="마이페이지" handleBack={() => router.back()} />
       <Layout.Main>
-        <div className="pl-10 pt-10 web:pl-32">
-          <h2 className="text-2xl web:text-3xl font-bold">구독 목록</h2>
-          {!loading && subscribeList.length > 0 && (
-            <p className="text-gray-600 mt-2">총 {subscribeList.length}명의 프로게이머를 구독중입니다.</p>
-          )}
-        </div>
-        
-        <div className="pt-10 web:pt-20">
-          {loading ? (
-            <div className="flex items-center justify-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-mint"></div>
-            </div>
-          ) : error ? (
-            <div className="flex items-center justify-center h-32">
-              <div className="text-center">
-                <p className="text-red-500 mb-4">{error}</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                >
-                  다시 시도
-                </button>
+        <div className="h-full w-full relative">
+          <div className="w-full pl-10 pt-10 web:pl-32">
+            <h2 className="text-2xl font-bold">구독 목록</h2>
+            {!loading && subscribeList.length > 0 && (
+              <p className="text-gray-600 mt-2">총 {subscribeList.length}명의 프로게이머를 구독중입니다.</p>
+            )}
+          </div>
+          
+          <div className="pt-10 web:pt-20">
+            {loading ? (
+              <div className="flex items-center justify-center h-32">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-mint"></div>
               </div>
-            </div>
-          ) : subscribeList.length === 0 ? (
-            <div className="flex items-center justify-center">
-              <div className="bg-white rounded-lg shadow-bottom p-8 w-[20.69rem] web:w-[30rem] text-center">
-                <div className="mb-4">
-                  <svg 
-                    className="mx-auto h-12 w-12 text-gray-400" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
+            ) : error ? (
+              <div className="flex items-center justify-center h-32">
+                <div className="text-center">
+                  <p className="text-red-500 mb-4">{error}</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
-                    />
-                  </svg>
+                    다시 시도
+                  </button>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  구독한 프로게이머가 없습니다
-                </h3>
-                <p className="text-gray-500 mb-4">
-                  관심 있는 프로게이머를 구독해보세요!
-                </p>
-                <button
-                  onClick={() => router.push('/')}
-                  className="px-4 py-2 bg-primary-mint text-white rounded-md hover:bg-primary-mint/80 transition-colors"
-                >
-                  프로게이머 둘러보기
-                </button>
               </div>
-            </div>
-          ) : (
-            <SubscribeList
-              list={subscribeList} 
-              onUnsubscribe={handleUnsubscribe}
-            />
-          )}
-        </div>
-        
-        <div className="flex justify-center pt-16 pb-10">
-          <button
-            onClick={() => setIsDeleteModalOpen(true)}
-            className="px-6 py-2 text-sm text-gray-500 underline hover:text-red-600 transition-colors"
-          >
-            회원탈퇴
-          </button>
+            ) : subscribeList.length === 0 ? (
+              <div className="flex items-center justify-center">
+                <div className="bg-white rounded-lg shadow-bottom p-8 w-[20.69rem] web:w-[30rem] text-center">
+                  <div className="mb-4">
+                    <svg 
+                      className="mx-auto h-12 w-12 text-gray-400" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    구독한 프로게이머가 없습니다
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    관심 있는 프로게이머를 구독해보세요!
+                  </p>
+                  <button
+                    onClick={() => router.push('/')}
+                    className="px-4 py-2 bg-primary-mint text-white rounded-md hover:bg-primary-mint/80 transition-colors"
+                  >
+                    프로게이머 둘러보기
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <SubscribeList
+                list={subscribeList} 
+                onUnsubscribe={handleUnsubscribe}
+              />
+            )}
+          </div>
+          
+          <div className="flex justify-center pt-16 pb-10">
+            <button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="absolute px-6 py-2 text-sm text-red-500 underline border rounded-md hover:text-red-600 transition-colors"
+            >
+              회원탈퇴
+            </button>
+          </div>
         </div>
       </Layout.Main>
       <DeleteAccountModal
