@@ -11,6 +11,7 @@ import { getFirebaseMessaging } from '@/lib/firebase';
 import { getDeviceType } from '@/utils/device';
 import { useIsLoggedIn, useUserId } from '@/hooks/useAuth';
 import { POST } from '@/app/api/register/route';
+import { IProPlayerData } from '@/types';
 
 export default function SubscribePage() {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function SubscribePage() {
               <SubscribeListSkeleton />
             </div>
           ) : (
-            <SubscribeList list={members} />
+            <SubscribeList list={members as IProPlayerData[]} />
           )}
         </Layout.Main>
       </Layout>
