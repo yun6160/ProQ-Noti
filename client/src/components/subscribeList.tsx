@@ -3,10 +3,15 @@
 import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import IngameBox from '@/components/IngameBox';
-import { gamerInfo } from '@/types';
+import { IProPlayerData } from '@/types';
 import { useIsLoggedIn } from '@/hooks/useAuth';
 
-export default function SubscribeList({ list }: { list: gamerInfo[] }) {
+interface SubscribeListProps {
+  list: IProPlayerData[];
+  onUnsubscribe?: (proId: number) => void;
+}
+
+export default function SubscribeList({ list, onUnsubscribe }: SubscribeListProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 

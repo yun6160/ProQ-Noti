@@ -68,7 +68,6 @@ export default function Page() {
         const result = POST(userId, currentToken, deviceType)
           .then((res) => {
             if (res.status === 'success') {
-              console.log(currentToken);
               localStorage.setItem('sentFCMToken', currentToken);
             } else {
               console.warn('FCM 토큰 저장 실패:', res.message);

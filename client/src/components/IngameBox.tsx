@@ -20,6 +20,8 @@ import SpellImages from './SpellImages';
 import RuneImages from './RuneImages';
 import { gameModeMap } from '@/hooks/lol';
 
+const FETCH_INTERVAL = 3000; 
+
 export default function IngameBox({
   pro_name,
   summoner_name,
@@ -38,12 +40,20 @@ export default function IngameBox({
   const [hasFetched, setHasFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [liveGame, setLiveGame] = useState<LiveGameData | null>(null);
+  const [lastFetchTime, setLastFetchTime] = useState<number>(0);
   const { toast } = useToast();
   const userId = useUserId();
   const messaging = getFirebaseMessaging();
 
   useEffect(() => {
     if (!puuid || !isOpen || hasFetched) return;
+
+    const now = Date.now();
+    if (now - lastFetchTime < FETCH_INTERVAL) {
+      setHasFetched(true);
+      return;
+    }
+    setLastFetchTime(now);
     if (isOpen && puuid) setLoading(true);
     fetch(`/api/live-game?summonerId=${puuid}`, { cache: 'no-store' })
       .then((res) => res.json())
@@ -53,9 +63,11 @@ export default function IngameBox({
         } else {
           setLiveGame(null);
         }
+        setHasFetched(true);
       })
       .catch((error) => {
         setLiveGame(null);
+        setHasFetched(true);
       })
       .finally(() => {
         setLoading(false);
@@ -140,8 +152,10 @@ export default function IngameBox({
             <>
               <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
                 <ChampionImage championId={championId} />
-                <SpellImages spellIds={spellIds} />
-                <RuneImages runePaths={runePaths} />
+                <div className="flex gap-1">
+                  <SpellImages spellIds={spellIds} />
+                  <RuneImages runePaths={runePaths} />
+                </div>
               </div>
               <div className="text-body2Bold">
                 {summoner_name}
