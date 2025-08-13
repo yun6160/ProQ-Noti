@@ -16,4 +16,5 @@ export interface LiveGameData {
   gameStartTime: number;
   gameLength: number;
   participants: LiveGameParticipant[];
+  gameQueueConfigId: number;
 }
