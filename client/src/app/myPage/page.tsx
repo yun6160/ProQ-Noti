@@ -185,7 +185,7 @@ export default function Mypage() {
           <div className="flex justify-center pt-16 pb-10">
             <button
               onClick={() => setIsDeleteModalOpen(true)}
-              className="absolute px-6 py-2 text-sm text-red-500 underline border rounded-md hover:text-red-600 transition-colors"
+              className="absolute bottom-10 right-10 px-6 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
             >
               회원탈퇴
             </button>
