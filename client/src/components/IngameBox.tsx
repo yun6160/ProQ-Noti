@@ -5,6 +5,7 @@ import LiveIcon from '@/app/assets/icons/live.svg';
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { FaHourglassStart } from 'react-icons/fa';
+import { GiSwordClash } from 'react-icons/gi';
 import { getToken } from 'firebase/messaging';
 import { getFirebaseMessaging } from '@/lib/firebase';
 import type {
@@ -19,6 +20,11 @@ import ChampionImage from './ChampionImage';
 import SpellImages from './SpellImages';
 import RuneImages from './RuneImages';
 import { gameModeMap } from '@/hooks/lol';
+
+const FETCH_INTERVAL = 3000; 
+
+const ARENA_GAME_MODES = ['CHERRY'];
+const ARENA_QUEUE_IDS = [1700, 1710]; // 아레나 큐
 
 export default function IngameBox({
   pro_name,
@@ -38,12 +44,20 @@ export default function IngameBox({
   const [hasFetched, setHasFetched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [liveGame, setLiveGame] = useState<LiveGameData | null>(null);
+  const [lastFetchTime, setLastFetchTime] = useState<number>(0);
   const { toast } = useToast();
   const userId = useUserId();
   const messaging = getFirebaseMessaging();
 
   useEffect(() => {
     if (!puuid || !isOpen || hasFetched) return;
+
+    const now = Date.now();
+    if (now - lastFetchTime < FETCH_INTERVAL) {
+      setHasFetched(true);
+      return;
+    }
+    setLastFetchTime(now);
     if (isOpen && puuid) setLoading(true);
     fetch(`/api/live-game?summonerId=${puuid}`, { cache: 'no-store' })
       .then((res) => res.json())
@@ -53,9 +67,11 @@ export default function IngameBox({
         } else {
           setLiveGame(null);
         }
+        setHasFetched(true);
       })
       .catch((error) => {
         setLiveGame(null);
+        setHasFetched(true);
       })
       .finally(() => {
         setLoading(false);
@@ -78,6 +94,15 @@ export default function IngameBox({
   const runePaths = player?.perks
     ? [player.perks.perkStyle, player.perks.perkSubStyle]
     : [];
+
+  const isArenaMode = (game: LiveGameData | null): boolean => {
+    if (!game) return false;
+    
+    return (
+      ARENA_GAME_MODES.includes(game.gameMode) ||
+      ARENA_QUEUE_IDS.includes(game.gameQueueConfigId)
+    );
+  };
 
   const handleSubscribeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -135,8 +160,30 @@ export default function IngameBox({
           {loading ? (
             // 1. 로딩 중일 때는 스피너를 표시
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-mint"></div>
+          ) : liveGame && isArenaMode(liveGame) ? (
+            // 2. 아레나 모드일 때 특별 표시
+            <div className="flex flex-col items-center justify-center gap-2 h-full">
+              <div className="flex items-center gap-2">
+                <GiSwordClash size={24} className="text-yellow-500" />
+                <span className="text-xl font-bold text-yellow-600">아레나 모드 중</span>
+                <GiSwordClash size={24} className="text-yellow-500" />
+              </div>
+              <div className="text-body2Bold">
+                {summoner_name}
+                {tag_line && `#${tag_line}`}
+              </div>
+              <div className="flex gap-1 items-center text-body2">
+                <FaHourglassStart className="text-primary-mint" />
+                <div>
+                  {Math.floor(
+                    (Date.now() - liveGame.gameStartTime) / 60000
+                  )}
+                  분 전 시작
+                </div>
+              </div>
+            </div>
           ) : player ? (
-            // 2. 로딩이 끝났고, player 데이터가 있으면 게임 정보를 표시
+            // 3. 일반 게임 모드일 때 기존 정보 표시
             <>
               <div className="flex gap-2 w-full h-full overflow-hidden items-center justify-center">
                 <ChampionImage championId={championId} />
@@ -167,7 +214,7 @@ export default function IngameBox({
               </div>
             </>
           ) : (
-            // 3. 로딩이 끝났는데, player 데이터가 없으면 '게임 중 아님' 메시지를 표시
+            // 4. 로딩이 끝났는데, player 데이터가 없으면 '게임 중 아님' 메시지를 표시
             <span className="text-xl">현재 게임중이 아닙니다.</span>
           )}
         </div>

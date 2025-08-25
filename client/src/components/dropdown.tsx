@@ -80,6 +80,13 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
               </li>
             )}
             {isLoggedIn && (
+              <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
+                <Link href="/mypage" className="block p-2 text-black no-underline">
+                  마이페이지
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
               <li className="text-center hover:bg-gray-100 cursor-pointer">
                 <button
                   onClick={() => requestToken(userId, isLoggedIn)}
