@@ -50,12 +50,8 @@ Deno.serve(async () => {
                 }
             }
 
-            // const gameData = await res.json();
-
             const is_online = res.status === 200;
             const last_online = is_online ? new Date().toISOString() : player.last_online;
-
-            // console.log("게임 타입", gameData.gameType);
 
             const { error: updateError } = await supabase
                 .from(TABLES.RIOT_ACCOUNTS)
