@@ -10,12 +10,7 @@ function delay(ms: number) {
 }
 
 Deno.serve(async () => {
-    const { data: players, error } = await supabase
-        .from(TABLES.RIOT_ACCOUNTS)
-        .select("*")
-        .order("last_checked_at", { ascending: true })
-        .limit(25)
-        .returns<Player[]>();
+    const { data: players, error } = await supabase.from(TABLES.RIOT_ACCOUNTS).select("*").returns<Player[]>();
 
     if (error || !players) {
         console.error("❌ 선수 데이터 가져오기 실패:", error);
@@ -26,8 +21,8 @@ Deno.serve(async () => {
     let failCount = 0;
 
     for (const player of players) {
-        const { id, summoner_name, puuid } = player;
-        const url = `https://kr.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${puuid}?api_key=${RIOT_API_KEY}`;
+        const { id, summoner_name, tag_line, puuid } = player;
+        const url = `https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${summoner_name}/${tag_line}?api_key=${RIOT_API_KEY}`;
 
         await delay(150);
 
@@ -50,19 +45,13 @@ Deno.serve(async () => {
                 }
             }
 
-            // const gameData = await res.json();
-
-            const is_online = res.status === 200;
-            const last_online = is_online ? new Date().toISOString() : player.last_online;
-
-            // console.log("게임 타입", gameData.gameType);
+            const resData = await res.json();
 
             const { error: updateError } = await supabase
                 .from(TABLES.RIOT_ACCOUNTS)
                 .update({
-                    is_online,
-                    last_online,
-                    last_checked_at: new Date().toISOString(),
+                    puuid: resData.puuid,
+                    updated_at: new Date().toISOString(),
                 })
                 .eq("id", id);
 
@@ -83,7 +72,7 @@ Deno.serve(async () => {
 
     return new Response(
         JSON.stringify({
-            message: "Player statuses updated (25 players)",
+            message: "Player puuid updated",
             success: successCount,
             failed: failCount,
             total: players.length,

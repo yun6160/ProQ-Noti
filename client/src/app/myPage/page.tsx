@@ -25,11 +25,11 @@ export default function Mypage() {
         setLoading(false);
         return;
       }
-
+    
       try {
         setLoading(true);
         setError(null);
-
+    
         const { data: subscriptions, error: subscriptionsError } = await supabase
           .from('subscribe')
           .select(`
@@ -44,44 +44,32 @@ export default function Mypage() {
             )
           `)
           .eq('user_id', userId);
-
+    
         if (subscriptionsError) {
+          console.error('구독 목록 조회 실패:', subscriptionsError);
           throw new Error('구독 목록을 가져오는데 실패했습니다.');
         }
-
+    
         if (!subscriptions || subscriptions.length === 0) {
           setSubscribeList([]);
           return;
         }
-
-        const riotProUserIds = subscriptions.map(sub => sub.riot_pro_user_id);
-        
-        const { data: proPlayersDetails, error: detailsError } = await supabase
-          .from('riot_pro_users')
-          .select('*')
-          .in('account_id', riotProUserIds);
-
-        if (detailsError) {
-          console.error('프로게이머 세부 정보 조회 실패:', detailsError);
-        }
-
+    
         const combinedData = subscriptions.map(subscription => {
-          const proPlayerDetail = proPlayersDetails?.find(
-            player => player.id === subscription.riot_pro_user_id
-          );
-
+          const proPlayerData = subscription.riot_pro_users;
+          
           return {
             id: subscription.riot_pro_user_id,
-            pro_name: subscription.riot_pro_users?.pro_name || 'Unknown',
-            position_number: subscription.riot_pro_users?.position_number || 0,
-            is_starter: subscription.riot_pro_users?.is_starter || false,
+            pro_name: proPlayerData?.pro_name || 'Unknown',
+            position_number: proPlayerData?.position_number || 0,
+            is_starter: proPlayerData?.is_starter || false,
             created_at: subscription.created_at,
-            team_id: subscription.riot_pro_users?.team_id || null,
+            team_id: proPlayerData?.team_id || null,
             account_id: subscription.riot_pro_user_id,
             is_subscribed: true
           };
         });
-
+    
         setSubscribeList(combinedData as unknown as IProPlayerData[]);
       } catch (err) {
         console.error('구독 목록 조회 실패:', err);
