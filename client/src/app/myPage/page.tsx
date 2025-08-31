@@ -54,9 +54,26 @@ export default function Mypage() {
           setSubscribeList([]);
           return;
         }
+
+        const riotProUserIds = subscriptions
+          .map(s => s.riot_pro_user_id)
+          .filter(Boolean);
+
+        const { data: riotAccounts, error: riotAccountsError } = await supabase
+          .from('riot_accounts')
+          .select('pro_user_id, summoner_name, tag_line, puuid, is_online, is_main, last_online')
+          .in('pro_user_id', riotProUserIds);
+        
+        if (riotAccountsError) {
+          console.error('라이엇 계정 정보 조회 실패:', riotAccountsError);
+          throw new Error('계정 정보를 가져오는데 실패했습니다.');
+        }
     
         const combinedData = subscriptions.map(subscription => {
           const proPlayerData = subscription.riot_pro_users;
+          const riotAccount = riotAccounts?.find(
+            acc => acc.pro_user_id === subscription.riot_pro_user_id && acc.is_main
+          );
           
           return {
             id: subscription.riot_pro_user_id,
@@ -66,11 +83,16 @@ export default function Mypage() {
             created_at: subscription.created_at,
             team_id: proPlayerData?.team_id || null,
             account_id: subscription.riot_pro_user_id,
-            is_subscribed: true
+            is_subscribed: true,
+            puuid: riotAccount?.puuid || null,
+            summoner_name: riotAccount?.summoner_name || 'Unknown',
+            tag_line: riotAccount?.tag_line || null,
+            is_online: riotAccount?.is_online || false,
+            last_online: riotAccount?.last_online || null
           };
         });
     
-        setSubscribeList(combinedData as unknown as IProPlayerData[]);
+        setSubscribeList(combinedData as IProPlayerData[]);
       } catch (err) {
         console.error('구독 목록 조회 실패:', err);
         setError(err instanceof Error ? err.message : '구독 목록을 가져오는데 실패했습니다.');
