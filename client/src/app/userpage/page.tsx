@@ -9,7 +9,7 @@ import { supabase } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function Mypage() {
+export default function UserPage() {
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [subscribeList, setSubscribeList] = useState<IProPlayerData[]>([]);
