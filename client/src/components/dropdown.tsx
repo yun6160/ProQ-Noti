@@ -81,7 +81,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
             )}
             {isLoggedIn && (
               <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
-                <Link href="/mypage" className="block p-2 text-black no-underline">
+                <Link href="/userpage" className="block p-2 text-black no-underline">
                   마이페이지
                 </Link>
               </li>

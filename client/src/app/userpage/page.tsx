@@ -9,7 +9,7 @@ import { supabase } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function Mypage() {
+export default function UserPage() {
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [subscribeList, setSubscribeList] = useState<IProPlayerData[]>([]);
@@ -25,11 +25,11 @@ export default function Mypage() {
         setLoading(false);
         return;
       }
-
+    
       try {
         setLoading(true);
         setError(null);
-
+    
         const { data: subscriptions, error: subscriptionsError } = await supabase
           .from('subscribe')
           .select(`
@@ -44,45 +44,55 @@ export default function Mypage() {
             )
           `)
           .eq('user_id', userId);
-
+    
         if (subscriptionsError) {
+          console.error('구독 목록 조회 실패:', subscriptionsError);
           throw new Error('구독 목록을 가져오는데 실패했습니다.');
         }
-
+    
         if (!subscriptions || subscriptions.length === 0) {
           setSubscribeList([]);
           return;
         }
 
-        const riotProUserIds = subscriptions.map(sub => sub.riot_pro_user_id);
+        const riotProUserIds = subscriptions
+          .map(s => s.riot_pro_user_id)
+          .filter(Boolean);
+
+        const { data: riotAccounts, error: riotAccountsError } = await supabase
+          .from('riot_accounts')
+          .select('pro_user_id, summoner_name, tag_line, puuid, is_online, is_main, last_online')
+          .in('pro_user_id', riotProUserIds);
         
-        const { data: proPlayersDetails, error: detailsError } = await supabase
-          .from('riot_pro_users')
-          .select('*')
-          .in('account_id', riotProUserIds);
-
-        if (detailsError) {
-          console.error('프로게이머 세부 정보 조회 실패:', detailsError);
+        if (riotAccountsError) {
+          console.error('라이엇 계정 정보 조회 실패:', riotAccountsError);
+          throw new Error('계정 정보를 가져오는데 실패했습니다.');
         }
-
+    
         const combinedData = subscriptions.map(subscription => {
-          const proPlayerDetail = proPlayersDetails?.find(
-            player => player.id === subscription.riot_pro_user_id
+          const proPlayerData = subscription.riot_pro_users;
+          const riotAccount = riotAccounts?.find(
+            acc => acc.pro_user_id === subscription.riot_pro_user_id && acc.is_main
           );
-
+          
           return {
             id: subscription.riot_pro_user_id,
-            pro_name: subscription.riot_pro_users?.pro_name || 'Unknown',
-            position_number: subscription.riot_pro_users?.position_number || 0,
-            is_starter: subscription.riot_pro_users?.is_starter || false,
+            pro_name: proPlayerData?.pro_name || 'Unknown',
+            position_number: proPlayerData?.position_number || 0,
+            is_starter: proPlayerData?.is_starter || false,
             created_at: subscription.created_at,
-            team_id: subscription.riot_pro_users?.team_id || null,
+            team_id: proPlayerData?.team_id || null,
             account_id: subscription.riot_pro_user_id,
-            is_subscribed: true
+            is_subscribed: true,
+            puuid: riotAccount?.puuid || null,
+            summoner_name: riotAccount?.summoner_name || 'Unknown',
+            tag_line: riotAccount?.tag_line || null,
+            is_online: riotAccount?.is_online || false,
+            last_online: riotAccount?.last_online || null
           };
         });
-
-        setSubscribeList(combinedData as unknown as IProPlayerData[]);
+    
+        setSubscribeList(combinedData as IProPlayerData[]);
       } catch (err) {
         console.error('구독 목록 조회 실패:', err);
         setError(err instanceof Error ? err.message : '구독 목록을 가져오는데 실패했습니다.');
@@ -117,7 +127,7 @@ export default function Mypage() {
     <Layout>
       <Layout.Header title="마이페이지" handleBack={() => router.back()} />
       <Layout.Main>
-        <div className="h-full w-full relative">
+        <div className="h-full w-full">
           <div className="w-full pl-10 pt-10 web:pl-32">
             <h2 className="text-2xl font-bold">구독 목록</h2>
             {!loading && subscribeList.length > 0 && (
@@ -125,7 +135,7 @@ export default function Mypage() {
             )}
           </div>
           
-          <div className="pt-10 web:pt-20">
+          <div className="pt-10 web:pt-20 min-h-[550px]">
             {loading ? (
               <div className="flex items-center justify-center h-32">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-mint"></div>
@@ -182,10 +192,10 @@ export default function Mypage() {
             )}
           </div>
           
-          <div className="flex justify-center pt-16 pb-10">
+          <div className="flex justify-end pt-16 pb-10">
             <button
               onClick={() => setIsDeleteModalOpen(true)}
-              className="absolute bottom-10 right-10 px-6 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              className="px-6 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
             >
               회원탈퇴
             </button>

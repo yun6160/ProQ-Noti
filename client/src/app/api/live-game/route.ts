@@ -9,7 +9,6 @@ export async function GET(req: Request) {
   if (!summonerId) {
     return NextResponse.json({ error: 'summonerId 파라미터가 없습니다.' }, { status: 400 });
   }
-
   try {
     const res = await fetch(
       `https://kr.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${summonerId}`,
@@ -22,10 +21,6 @@ export async function GET(req: Request) {
 
     if (res.status === 404) {
       return NextResponse.json({ inGame: false });
-    }
-
-    if (!res.ok) {
-      return NextResponse.json({ error: '게임 정보를 가져올 수 없습니다.' }, { status: res.status });
     }
 
     const data = await res.json();
