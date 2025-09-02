@@ -14,7 +14,7 @@ export default function LayoutRouter({
   const getBgColor = () => {
     if (pathname === '/' || pathname.startsWith('/subscribe/'))
       return 'bg-primary-skyblue';
-    if (['/login', '/mypage'].includes(pathname)) return 'bg-primary-mint';
+    if (['/login', '/userpage'].includes(pathname)) return 'bg-primary-mint';
     return 'bg-primary-white';
   };
 
