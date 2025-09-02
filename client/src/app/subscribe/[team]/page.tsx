@@ -79,13 +79,23 @@ export default function SubscribePage() {
       <Layout>
         <Layout.Header title={teamName} handleBack={() => router.back()} />
         <Layout.Main>
-          {loading ? (
-            <div className="flex justify-center items-center h-full">
+          <div className="my-6">
+            {loading ? (
               <SubscribeListSkeleton />
-            </div>
-          ) : (
-            <SubscribeList list={members as IProPlayerData[]} />
-          )}
+            ) : (
+              <SubscribeList list={members as IProPlayerData[]} />
+            )}
+          </div>
+          <div className="flex w-full justify-end mt-2">
+            <a
+              href="https://forms.gle/r8jky7uKPyCMuwdR6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              계정 추가 제보
+            </a>
+          </div>
         </Layout.Main>
       </Layout>
     </>
