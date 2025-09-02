@@ -127,7 +127,7 @@ export default function Mypage() {
     <Layout>
       <Layout.Header title="마이페이지" handleBack={() => router.back()} />
       <Layout.Main>
-        <div className="h-full w-full relative">
+        <div className="h-full w-full">
           <div className="w-full pl-10 pt-10 web:pl-32">
             <h2 className="text-2xl font-bold">구독 목록</h2>
             {!loading && subscribeList.length > 0 && (
@@ -135,7 +135,7 @@ export default function Mypage() {
             )}
           </div>
           
-          <div className="pt-10 web:pt-20">
+          <div className="pt-10 web:pt-20 min-h-[550px]">
             {loading ? (
               <div className="flex items-center justify-center h-32">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-mint"></div>
@@ -192,10 +192,10 @@ export default function Mypage() {
             )}
           </div>
           
-          <div className="flex justify-center pt-16 pb-10">
+          <div className="flex justify-end pt-16 pb-10">
             <button
               onClick={() => setIsDeleteModalOpen(true)}
-              className="absolute bottom-10 right-10 px-6 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              className="px-6 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
             >
               회원탈퇴
             </button>
