@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useDispatch } from 'react-redux';
 import { requestToken } from '@/lib/firebase';
+import { redirect } from 'next/navigation';
 
 interface DropdownProps {
   isOpen?: boolean;
@@ -31,6 +32,7 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
     toast({
       description: '로그아웃 되었습니다.'
     });
+    redirect('/');
   };
 
   return (
@@ -81,7 +83,10 @@ const Dropdown = ({ isOpen = false }: DropdownProps) => {
             )}
             {isLoggedIn && (
               <li className="border-b border-gray-300 text-center hover:bg-gray-100 cursor-pointer">
-                <Link href="/userpage" className="block p-2 text-black no-underline">
+                <Link
+                  href="/userpage"
+                  className="block p-2 text-black no-underline"
+                >
                   마이페이지
                 </Link>
               </li>
