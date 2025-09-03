@@ -1,9 +1,3 @@
-// firebase-messaging-sw.js
-
-// Firebase SDK 스크립트 로드
-// Firebase 버전 9 (compat 라이브러리 사용).
-// 최신 버전은 'firebase/app'과 'firebase/messaging'으로 임포트하지만,
-// 서비스 워커 환경에서는 'importScripts'를 사용하는 호환 버전이 더 일반적입니다.
 importScripts(
   'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js'
 );
@@ -11,8 +5,6 @@ importScripts(
   'https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js'
 );
 
-// TODO: 네 프로젝트의 Firebase 구성 객체를 입력해줘! (필수)
-// Firebase Console -> 프로젝트 설정 -> 내 앱 -> 웹 앱 설정에서 확인 가능
 const firebaseConfig = {
   apiKey: 'AIzaSyA_E5OoRqxBvnhJOr8SaUEl5Cq_RRZdxI8',
   authDomain: 'proq-noti.firebaseapp.com',
@@ -44,7 +36,7 @@ self.addEventListener('activate', function (event) {
   event.waitUntil(clients.claim());
 });
 
-// FCM 백그라운드 메시지 수신 핸들러 (네 기존 'push' 이벤트를 대체)
+// FCM 백그라운드 메시지 수신 핸들러
 // 앱이 포그라운드에 있지 않을 때 (브라우저가 닫히거나 다른 탭에 있을 때) 호출됨
 messaging.onBackgroundMessage((payload) => {
   console.log(
@@ -65,9 +57,11 @@ messaging.onBackgroundMessage((payload) => {
     data: messageData // data payload 전체를 notificationOptions.data에 넣어줌 (클릭 핸들러에서 사용)
   };
   // 푸시 알림 표시
-  
-  return self.registration.showNotification(notificationTitle, notificationOptions);
-  
+
+  return self.registration.showNotification(
+    notificationTitle,
+    notificationOptions
+  );
 });
 
 // 푸시 알림 클릭 이벤트 핸들러 (사용자가 알림을 클릭했을 때)
@@ -81,7 +75,7 @@ self.addEventListener('notificationclick', (event) => {
   const clickAction =
     event.notification.data?.click_action ||
     event.notification.fcmOptions?.link ||
-    '/'; // 기본 경로로 폴백
+    '/userpage'; // 기본 경로로 폴백
 
   // 해당 URL로 브라우저 탭 열기 또는 기존 탭 활성화
   event.waitUntil(
