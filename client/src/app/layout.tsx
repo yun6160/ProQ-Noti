@@ -19,7 +19,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex justify-center w-full" style={{ height: '100vh' }}>
+      <body className="flex justify-center w-full min-h-screen">
         <Providers>
           <AuthProvider />
           <LayoutRouter>{children}</LayoutRouter>
